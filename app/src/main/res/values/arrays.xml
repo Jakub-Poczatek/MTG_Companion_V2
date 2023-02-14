@@ -15,4 +15,8 @@
         <item>Tribal</item>
         <item>Vanguard</item>
     </string-array>
+    <string-array name="searchTypes">
+        <item>name</item>
+        <item>type</item>
+    </string-array>
 </resources>

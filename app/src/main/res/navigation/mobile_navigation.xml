@@ -7,11 +7,22 @@
     <fragment
         android:id="@+id/cardFragment"
         android:name="org.wit.mtgcompanionv2.ui.card.CardFragment"
-        android:label="fragment_card"
-        tools:layout="@layout/fragment_card" />
+        android:label="@string/topBarLabelCard"
+        tools:layout="@layout/fragment_card" >
+        <action
+            android:id="@+id/action_cardFragment_to_cardListFragment"
+            app:destination="@id/cardListFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="org.wit.mtgcompanionv2.ui.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/cardListFragment"
+        android:name="org.wit.mtgcompanionv2.ui.cardList.CardListFragment"
+        android:label="@string/topBarLabelCardList" >
+        <action
+            android:id="@+id/action_cardListFragment_to_cardFragment"
+            app:destination="@id/cardFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
 </navigation>

@@ -23,4 +23,11 @@
     <string name="cardGrnCost">Green</string>
     <string name="cardDescription">Description</string>
     <string name="button_addCard">Add Card</string>
+    <string name="cardListTitle">Card List</string>
+    <string name="FltAddBtnDescription">Floating Add Button</string>
+    <string name="searchHint">Search</string>
+    <string name="navDrawerItemAddCard">Add Card</string>
+    <string name="navDrawerItemCardList">List of Cards</string>
+    <string name="topBarLabelCard">Card</string>
+    <string name="topBarLabelCardList">Card List</string>
 </resources>
