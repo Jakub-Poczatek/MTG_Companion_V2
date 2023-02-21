@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 
 class CardListViewModel : ViewModel() {
     private val _text = MutableLiveData<String>().apply {
-        value = "This is gallery Fragment"
+        value = "This is the Card List Fragment"
     }
     val text: LiveData<String> = _text
 }

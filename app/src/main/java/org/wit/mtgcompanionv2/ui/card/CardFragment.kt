@@ -19,7 +19,7 @@ import org.wit.mtgcompanionv2.models.CardModel
 class CardFragment : Fragment() {
 
     lateinit var app: MTGCompanion
-    private var _fragBinding: FragmentCardBinding? = null;
+    private var _fragBinding: FragmentCardBinding? = null
     private val fragBinding get() = _fragBinding!!
     private lateinit var cardViewModel: CardViewModel
     private var card = CardModel()
@@ -33,7 +33,7 @@ class CardFragment : Fragment() {
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
-        _fragBinding = FragmentCardBinding.inflate(inflater, container, false);
+        _fragBinding = FragmentCardBinding.inflate(inflater, container, false)
         val root = fragBinding.root
         activity?.title = getString(R.string.cardActivityTitle)
         cardViewModel = ViewModelProvider(this)[CardViewModel::class.java]
@@ -52,11 +52,6 @@ class CardFragment : Fragment() {
         return NavigationUI.onNavDestinationSelected(item,
                 requireView().findNavController()) || super.onOptionsItemSelected(item)
     }
-
-    /*override fun onResume() {
-        super.onResume()
-
-    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -30,4 +30,12 @@
     <string name="navDrawerItemCardList">List of Cards</string>
     <string name="topBarLabelCard">Card</string>
     <string name="topBarLabelCardList">Card List</string>
+    <string name="mapPlaceName">Sample Name</string>
+    <string name="mapPlaceAddress">Sample Address</string>
+    <string name="mapPlaceLoc">0, 0</string>
+    <string name="mapPlaceRating">0, 0</string>
+    <string name="mapStarDesc">Star Icon</string>
+    <string name="mapPlaceTotalUserRatings">0</string>
+    <string name="mapPlaceOpen">True</string>
+    <string name="navDrawerItemMap">Map</string>
 </resources>
