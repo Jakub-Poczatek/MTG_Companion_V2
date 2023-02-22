@@ -71,7 +71,7 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
         mapViewModel = ViewModelProvider(this)[MapViewModel::class.java]
         mapViewModel.text.observe(viewLifecycleOwner, Observer{})
 
-        //fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()){
@@ -87,11 +87,11 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
             }
             }
         }
-        //checkLocPermissions()
 
         contentBinding.mapMpVw.getMapAsync {
             map = it
             configureMap()
+            checkLocPermissions()
         }
 
         return root
@@ -132,6 +132,26 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
         if(foundPlace?.open!!) contentBinding.mapOpenTxt.text = "Open"
         else contentBinding.mapOpenTxt.text = "Closed"
         return false
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        contentBinding.mapMpVw.onLowMemory()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        contentBinding.mapMpVw.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        contentBinding.mapMpVw.onResume()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        contentBinding.mapMpVw.onSaveInstanceState(outState)
     }
 
     @SuppressLint("MissingPermission")
@@ -197,10 +217,10 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
         map.setOnMarkerClickListener(this)
     }
 
-    /*private fun checkLocPermissions(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+    private fun checkLocPermissions(){
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
             locationPermissionRequest.launch(arrayOf(
@@ -210,5 +230,5 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
         } else {
             retrieveLocation()
         }
-    }*/
+    }
 }
