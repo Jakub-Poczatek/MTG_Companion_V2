@@ -38,4 +38,5 @@
     <string name="mapPlaceTotalUserRatings">0</string>
     <string name="mapPlaceOpen">True</string>
     <string name="navDrawerItemMap">Map</string>
+    <string name="topBarLabelMap">Map</string>
 </resources>
