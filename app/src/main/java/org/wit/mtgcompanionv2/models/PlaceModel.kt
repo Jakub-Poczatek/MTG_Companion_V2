@@ -1,4 +1,4 @@
-package org.wit.mtgcompanionv2.ui.map
+package org.wit.mtgcompanionv2.models
 
 import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng

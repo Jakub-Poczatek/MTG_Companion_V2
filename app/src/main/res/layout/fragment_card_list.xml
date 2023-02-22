@@ -18,18 +18,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/menuFloatingAddButton"
-        android:layout_width="wrap_content"
+    <Toolbar
+        android:id="@+id/menuBottomToolbar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:clickable="true"
-        android:contentDescription="@string/FltAddBtnDescription"
-        app:layout_constraintBottom_toTopOf="@id/menuBottomToolbar"
+        android:alpha="0.75"
+        android:background="?attr/colorSecondaryVariant"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_anchorGravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add"
-        tools:ignore="ImageContrastCheck" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/cardListSearchTxt"
@@ -66,17 +66,17 @@
         app:layout_constraintStart_toEndOf="@id/cardListSearchTxt"
         app:layout_constraintTop_toTopOf="@id/menuBottomToolbar" />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/menuBottomToolbar"
-        android:layout_width="0dp"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/menuFloatingAddButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:alpha="0.75"
-        android:background="?attr/colorSecondaryVariant"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_anchorGravity="bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:contentDescription="@string/FltAddBtnDescription"
+        app:layout_constraintBottom_toTopOf="@id/menuBottomToolbar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:srcCompat="@android:drawable/ic_input_add"
+        tools:ignore="ImageContrastCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

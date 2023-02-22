@@ -15,6 +15,7 @@ import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.databinding.FragmentCardBinding
 import org.wit.mtgcompanionv2.main.MTGCompanion
 import org.wit.mtgcompanionv2.models.CardModel
+import timber.log.Timber.i
 
 class CardFragment : Fragment() {
 
@@ -40,6 +41,11 @@ class CardFragment : Fragment() {
         cardViewModel.text.observe(viewLifecycleOwner, Observer{
         })
         setButtonListener(fragBinding)
+
+        if (requireArguments().getBoolean("edit")) {
+            i("We editing")
+        }
+
         return root
     }
 

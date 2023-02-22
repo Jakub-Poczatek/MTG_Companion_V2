@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -32,8 +31,10 @@ import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.databinding.ContentMapBinding
 import org.wit.mtgcompanionv2.databinding.FragmentMapBinding
 import org.wit.mtgcompanionv2.main.MTGCompanion
+import org.wit.mtgcompanionv2.models.PlaceModel
 import org.wit.mtgcompanionv2.ui.card.CardFragment
 import timber.log.Timber
+import timber.log.Timber.i
 
 class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
 
@@ -58,15 +59,12 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
+        activity?.title = "Map"
+
         _fragBinding = FragmentMapBinding.inflate(inflater, container, false)
         val root = fragBinding.root
-
-        // I dunno about this, chief //
-        //_contentBinding = ContentMapBinding.inflate(inflater, container, false)
         _contentBinding = ContentMapBinding.bind(fragBinding.root)
         contentBinding.mapMpVw.onCreate(savedInstanceState)
-
-        activity?.title = "Map"
 
         mapViewModel = ViewModelProvider(this)[MapViewModel::class.java]
         mapViewModel.text.observe(viewLifecycleOwner, Observer{})
