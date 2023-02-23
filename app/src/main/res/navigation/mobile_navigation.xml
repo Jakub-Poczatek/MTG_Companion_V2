@@ -28,6 +28,10 @@
             app:argType="org.wit.mtgcompanionv2.models.CardModel"
             app:nullable="true"
             android:defaultValue="@null" />
+        <argument
+            android:name="quickAdd"
+            app:argType="boolean"
+            android:defaultValue="false" />
         />
     </fragment>
     <fragment

@@ -39,4 +39,6 @@
     <string name="mapPlaceOpen">True</string>
     <string name="navDrawerItemMap">Map</string>
     <string name="topBarLabelMap">Map</string>
+    <string name="saveCard">Save Card</string>
+    <string name="select_card_art">Select Card Art</string>
 </resources>

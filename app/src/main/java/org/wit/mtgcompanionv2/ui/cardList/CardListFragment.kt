@@ -1,5 +1,6 @@
 package org.wit.mtgcompanionv2.ui.cardList
 
+import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
@@ -11,6 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.adapters.CardAdapter
@@ -45,10 +47,16 @@ class CardListFragment : Fragment(), CardListener {
         cardListViewModel = ViewModelProvider(this).get(CardListViewModel::class.java)
         cardListViewModel.text.observe(viewLifecycleOwner, Observer {})
 
-        fragBinding.cardListRecycleView.layoutManager = LinearLayoutManager (activity)
+        val layoutManager = GridLayoutManager(requireContext(), 2)
+        fragBinding.cardListRecycleView.layoutManager = layoutManager
         fragBinding.cardListRecycleView.adapter = CardAdapter(app.cardStore.findAll(), this)
 
         textChangeListener()
+
+        fragBinding.menuFloatingAddButton.setOnClickListener {
+            val bundle: Bundle = bundleOf("quickAdd" to true)
+            navController.navigate(R.id.cardFragment, bundle)
+        }
 
         return root
     }
@@ -71,7 +79,7 @@ class CardListFragment : Fragment(), CardListener {
     override fun onCardClick(card: CardModel, position: Int) {
         fragBinding.cardListSearchTxt.text.clear()
         val bundle: Bundle = bundleOf("edit" to true, "card" to card)
-        val result = navController.navigate(R.id.cardFragment, bundle)
+        navController.navigate(R.id.cardFragment, bundle)
     }
 
     companion object {

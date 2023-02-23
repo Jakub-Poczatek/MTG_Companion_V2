@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.databinding.HomeBinding
+import timber.log.Timber.i
 
 class Home : AppCompatActivity() {
 

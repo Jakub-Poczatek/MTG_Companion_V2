@@ -20,6 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/cardNameTxt"
         app:layout_constraintTop_toTopOf="@id/cardNameTxt"
+        app:srcCompat="@drawable/ic_default_card_art"
         tools:ignore="ImageContrastCheck" />
 
     <EditText
