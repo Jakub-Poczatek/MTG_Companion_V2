@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "105598185825",
+    "project_id": "mtg-companion-124bf",
+    "storage_bucket": "mtg-companion-124bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105598185825:android:c982abe4c792b2174d9520",
+        "android_client_info": {
+          "package_name": "org.wit.mtgcompanion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "105598185825-a30qmrk4fnvn1btk8mgokqbd305eto4f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpbpj_tMBI0e-l2Q6QoXsnInUlX3JBRIQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "105598185825-a30qmrk4fnvn1btk8mgokqbd305eto4f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105598185825:android:4d3877cc2dc4466f4d9520",
+        "android_client_info": {
+          "package_name": "org.wit.mtgcompanionv2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "105598185825-a30qmrk4fnvn1btk8mgokqbd305eto4f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpbpj_tMBI0e-l2Q6QoXsnInUlX3JBRIQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "105598185825-a30qmrk4fnvn1btk8mgokqbd305eto4f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

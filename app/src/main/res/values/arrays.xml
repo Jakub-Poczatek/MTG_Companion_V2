@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="cardTypes">
+        <item>Artifact</item>
+        <item>Conspiracy</item>
+        <item>Creature</item>
+        <item>Enchantment</item>
+        <item>Instant</item>
+        <item>Land</item>
+        <item>Phenomenon</item>
+        <item>Plane</item>
+        <item>Planeswalker</item>
+        <item>Scheme</item>
+        <item>Sorcery</item>
+        <item>Tribal</item>
+        <item>Vanguard</item>
+    </string-array>
+    <string-array name="searchTypes">
+        <item>name</item>
+        <item>type</item>
+    </string-array>
+</resources>
