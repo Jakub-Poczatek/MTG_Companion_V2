@@ -66,7 +66,7 @@ class CardFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.menuItemDeleteCard -> {
-                app.cardStore.delete(card)
+                app.cards.delete(card)
                 navController.popBackStack()
             }
         }
@@ -145,10 +145,10 @@ class CardFragment : Fragment() {
 
             if(card.name.isNotEmpty()) {
                 if(requireArguments().getBoolean("edit")) {
-                    app.cardStore.update(card.copy())
+                    app.cards.update(card.copy())
                     navController.popBackStack()
                 } else {
-                    app.cardStore.create(card.copy())
+                    app.cards.create(card.copy())
                     defaultAllFields()
                     if(requireArguments().getBoolean("quickAdd"))
                         navController.popBackStack()

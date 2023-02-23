@@ -1,6 +1,5 @@
 package org.wit.mtgcompanionv2.ui.cardList
 
-import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
@@ -13,14 +12,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.adapters.CardAdapter
 import org.wit.mtgcompanionv2.adapters.CardListener
 import org.wit.mtgcompanionv2.databinding.FragmentCardListBinding
 import org.wit.mtgcompanionv2.main.MTGCompanion
 import org.wit.mtgcompanionv2.models.CardModel
-import org.wit.mtgcompanionv2.ui.card.CardFragment
 
 class CardListFragment : Fragment(), CardListener {
 
@@ -49,7 +46,7 @@ class CardListFragment : Fragment(), CardListener {
 
         val layoutManager = GridLayoutManager(requireContext(), 2)
         fragBinding.cardListRecycleView.layoutManager = layoutManager
-        fragBinding.cardListRecycleView.adapter = CardAdapter(app.cardStore.findAll(), this)
+        fragBinding.cardListRecycleView.adapter = CardAdapter(app.cards.findAll(), this)
 
         textChangeListener()
 
@@ -92,10 +89,10 @@ class CardListFragment : Fragment(), CardListener {
     private fun textChangeListener(){
         fragBinding.cardListSearchTxt.addTextChangedListener {
             val query = fragBinding.cardListSearchTxt.text.toString().lowercase().trim()
-            val cards = app.cardStore.findAll()
+            val cards = app.cards.findAll()
             val filteredCards = ArrayList<CardModel>()
             if(query.isEmpty()) {
-                fragBinding.cardListRecycleView.adapter = CardAdapter(app.cardStore.findAll(), this)
+                fragBinding.cardListRecycleView.adapter = CardAdapter(app.cards.findAll(), this)
             } else if(fragBinding.cardListSearchBySpinner.selectedItem.toString() == "name") {
                 for (card in cards) {
                     if (query in card.name.lowercase().trim())
@@ -109,7 +106,7 @@ class CardListFragment : Fragment(), CardListener {
                 }
                 fragBinding.cardListRecycleView.adapter = CardAdapter(filteredCards, this)
             } else {
-                fragBinding.cardListRecycleView.adapter = CardAdapter(app.cardStore.findAll(), this)
+                fragBinding.cardListRecycleView.adapter = CardAdapter(app.cards.findAll(), this)
             }
         }
     }
