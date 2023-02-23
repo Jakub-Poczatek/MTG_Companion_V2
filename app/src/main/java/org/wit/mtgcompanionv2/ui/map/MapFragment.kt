@@ -54,6 +54,7 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         app = activity?.application as MTGCompanion
+        setHasOptionsMenu(false)
     }
 
     override fun onCreateView(

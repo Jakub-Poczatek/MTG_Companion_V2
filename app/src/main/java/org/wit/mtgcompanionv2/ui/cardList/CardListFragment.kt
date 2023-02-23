@@ -34,7 +34,7 @@ class CardListFragment : Fragment(), CardListener {
         super.onCreate(savedInstanceState)
         app = activity?.application as MTGCompanion
         navController = findNavController()
-        setHasOptionsMenu(true)
+        setHasOptionsMenu(false)
     }
 
     override fun onCreateView(
@@ -57,7 +57,6 @@ class CardListFragment : Fragment(), CardListener {
             val bundle: Bundle = bundleOf("quickAdd" to true)
             navController.navigate(R.id.cardFragment, bundle)
         }
-
         return root
     }
 
@@ -67,8 +66,8 @@ class CardListFragment : Fragment(), CardListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(item,
-        requireView().findNavController()) || super.onOptionsItemSelected(item)
+        return NavigationUI.onNavDestinationSelected(item, requireView().findNavController())
+                || super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

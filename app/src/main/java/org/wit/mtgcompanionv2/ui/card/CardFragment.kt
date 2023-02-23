@@ -1,9 +1,6 @@
 package org.wit.mtgcompanionv2.ui.card
 
-import android.content.ContentResolver
 import android.content.Intent
-import android.content.res.Resources
-import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import androidx.activity.result.ActivityResultLauncher
@@ -44,13 +41,13 @@ class CardFragment : Fragment() {
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
+            savedInstanceState: Bundle?): View {
         _fragBinding = FragmentCardBinding.inflate(inflater, container, false)
         val root = fragBinding.root
         activity?.title = getString(R.string.cardActivityTitle)
         cardViewModel = ViewModelProvider(this)[CardViewModel::class.java]
-        cardViewModel.text.observe(viewLifecycleOwner, Observer{
-        })
+        cardViewModel.text.observe(viewLifecycleOwner) {
+        }
         setAddButtonListener(fragBinding)
 
         registerImagePickerCallback()
@@ -67,8 +64,14 @@ class CardFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(item,
-                requireView().findNavController()) || super.onOptionsItemSelected(item)
+        when (item.itemId){
+            R.id.menuItemDeleteCard -> {
+                app.cardStore.delete(card)
+                navController.popBackStack()
+            }
+        }
+        return NavigationUI.onNavDestinationSelected(item, requireView().findNavController())
+                || super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {
@@ -80,9 +83,10 @@ class CardFragment : Fragment() {
         super.onResume()
         if (requireArguments().getBoolean("edit")) {
             setCard(requireArguments().getParcelable("card")!!)
+            setHasOptionsMenu(true)
         } else {
-            i("I am running this")
             defaultAllFields()
+            setHasOptionsMenu(false)
         }
         val cardViewModel = ViewModelProvider(this)[CardViewModel::class.java]
         cardViewModel.text.observe(viewLifecycleOwner, Observer{
