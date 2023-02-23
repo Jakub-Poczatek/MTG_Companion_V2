@@ -3,6 +3,7 @@ package org.wit.mtgcompanionv2.ui.card
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -46,8 +47,10 @@ class CardFragment : Fragment() {
         val root = fragBinding.root
         activity?.title = getString(R.string.cardActivityTitle)
         cardViewModel = ViewModelProvider(this)[CardViewModel::class.java]
-        cardViewModel.text.observe(viewLifecycleOwner) {
-        }
+        cardViewModel.observableStatus.observe(viewLifecycleOwner, Observer {
+            status -> status?.let { render(status) }
+        })
+
         setAddButtonListener(fragBinding)
 
         registerImagePickerCallback()
@@ -58,6 +61,18 @@ class CardFragment : Fragment() {
         return root
     }
 
+    private fun render(status: Boolean) {
+        when (status) {
+            true -> {
+                view?.let {
+                    //Uncomment this if you want to immediately return to Report
+                    //findNavController().popBackStack()
+                }
+            }
+            false -> Toast.makeText(context, getString(R.string.cardError), Toast.LENGTH_LONG).show()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_card, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -66,7 +81,8 @@ class CardFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.menuItemDeleteCard -> {
-                app.cards.delete(card)
+                //app.cards.delete(card)
+                cardViewModel.deleteCard(card)
                 navController.popBackStack()
             }
         }
@@ -88,9 +104,9 @@ class CardFragment : Fragment() {
             defaultAllFields()
             setHasOptionsMenu(false)
         }
-        val cardViewModel = ViewModelProvider(this)[CardViewModel::class.java]
-        cardViewModel.text.observe(viewLifecycleOwner, Observer{
-        })
+        //val cardViewModel = ViewModelProvider(this)[CardViewModel::class.java]
+        //cardViewModel.text.observe(viewLifecycleOwner, Observer{
+        //})
     }
 
     private fun resetViewAttributes() {
@@ -145,10 +161,12 @@ class CardFragment : Fragment() {
 
             if(card.name.isNotEmpty()) {
                 if(requireArguments().getBoolean("edit")) {
-                    app.cards.update(card.copy())
+                    //app.cards.update(card.copy())
+                    cardViewModel.updateCard(card)
                     navController.popBackStack()
                 } else {
-                    app.cards.create(card.copy())
+                    //app.cards.create(card.copy())
+                    cardViewModel.addCard(card)
                     defaultAllFields()
                     if(requireArguments().getBoolean("quickAdd"))
                         navController.popBackStack()

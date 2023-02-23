@@ -30,7 +30,7 @@ class CardAdapter constructor(private var cards: List<CardModel>, private val li
 
     inner class MainHolder(private val binding : CardCardBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(card: CardModel, listener: CardListener) {
+        /*fun bind(card: CardModel, listener: CardListener) {
             binding.cardCardNameTxt.text = card.name
             binding.cardCardTypeTxt.text = card.type
             val powerToughnessString = "${card.power}/${card.toughness}"
@@ -38,6 +38,14 @@ class CardAdapter constructor(private var cards: List<CardModel>, private val li
             val costString = "${card.neutral}/${card.white}/${card.black}/${card.red}/${card.blue}/${card.green}"
             binding.cardCardCostTxt.text = costString
             binding.cardCardDescriptionTxt.text = card.description
+            Picasso.get().load(card.image).into(binding.cardCardArtImgView)
+            binding.root.setOnClickListener {
+                listener.onCardClick(card, adapterPosition)
+            }
+        }*/
+
+        fun bind(card: CardModel, listener: CardListener) {
+            binding.card = card
             Picasso.get().load(card.image).into(binding.cardCardArtImgView)
             binding.root.setOnClickListener {
                 listener.onCardClick(card, adapterPosition)

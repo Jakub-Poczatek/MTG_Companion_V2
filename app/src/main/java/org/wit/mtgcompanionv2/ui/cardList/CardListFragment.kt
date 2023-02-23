@@ -41,18 +41,22 @@ class CardListFragment : Fragment(), CardListener {
         val root = fragBinding.root
         activity?.title = getString(R.string.cardListTitle)
 
-        cardListViewModel = ViewModelProvider(this).get(CardListViewModel::class.java)
-        cardListViewModel.text.observe(viewLifecycleOwner, Observer {})
+        cardListViewModel = ViewModelProvider(this)[CardListViewModel::class.java]
 
         val layoutManager = GridLayoutManager(requireContext(), 2)
         fragBinding.cardListRecycleView.layoutManager = layoutManager
-        fragBinding.cardListRecycleView.adapter = CardAdapter(app.cards.findAll(), this)
+        cardListViewModel.observableCardList.observe(viewLifecycleOwner, Observer {
+            cards ->
+            cards.let {render(cards)}
+        })
+        fragBinding.cardListRecycleView.adapter = CardAdapter(cardListViewModel.observableCardList.value!!, this)
+
 
         textChangeListener()
 
         fragBinding.menuFloatingAddButton.setOnClickListener {
-            val bundle: Bundle = bundleOf("quickAdd" to true)
-            navController.navigate(R.id.cardFragment, bundle)
+            val action = CardListFragmentDirections.actionCardListFragmentToCardFragment(false, null, true)
+            navController.navigate(action)
         }
         return root
     }
@@ -67,6 +71,21 @@ class CardListFragment : Fragment(), CardListener {
                 || super.onOptionsItemSelected(item)
     }
 
+    private fun render(cardsList: List<CardModel>) {
+        fragBinding.cardListRecycleView.adapter = CardAdapter(cardsList, this)
+        if (cardsList.isEmpty()) {
+            fragBinding.cardListRecycleView.visibility = View.GONE
+            fragBinding.cardsNotFound.visibility = View.VISIBLE
+            fragBinding.cardListSearchBySpinner.isEnabled = false
+            fragBinding.cardListSearchTxt.isEnabled = false
+        } else {
+            fragBinding.cardListRecycleView.visibility = View.VISIBLE
+            fragBinding.cardsNotFound.visibility = View.GONE
+            fragBinding.cardListSearchBySpinner.isEnabled = true
+            fragBinding.cardListSearchTxt.isEnabled = true
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _fragBinding = null
@@ -74,8 +93,13 @@ class CardListFragment : Fragment(), CardListener {
 
     override fun onCardClick(card: CardModel, position: Int) {
         fragBinding.cardListSearchTxt.text.clear()
-        val bundle: Bundle = bundleOf("edit" to true, "card" to card)
-        navController.navigate(R.id.cardFragment, bundle)
+        val action = CardListFragmentDirections.actionCardListFragmentToCardFragment(true, card, false)
+        navController.navigate(action)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        cardListViewModel.load()
     }
 
     companion object {
@@ -89,24 +113,23 @@ class CardListFragment : Fragment(), CardListener {
     private fun textChangeListener(){
         fragBinding.cardListSearchTxt.addTextChangedListener {
             val query = fragBinding.cardListSearchTxt.text.toString().lowercase().trim()
-            val cards = app.cards.findAll()
             val filteredCards = ArrayList<CardModel>()
             if(query.isEmpty()) {
-                fragBinding.cardListRecycleView.adapter = CardAdapter(app.cards.findAll(), this)
+                fragBinding.cardListRecycleView.adapter = CardAdapter(cardListViewModel.observableCardList.value!!, this)
             } else if(fragBinding.cardListSearchBySpinner.selectedItem.toString() == "name") {
-                for (card in cards) {
+                for (card in cardListViewModel.observableCardList.value!!) {
                     if (query in card.name.lowercase().trim())
                         filteredCards.add(card)
                 }
                 fragBinding.cardListRecycleView.adapter = CardAdapter(filteredCards, this)
             } else if (fragBinding.cardListSearchBySpinner.selectedItem.toString() == "type") {
-                for (card in cards) {
+                for (card in cardListViewModel.observableCardList.value!!) {
                     if (query in card.type.lowercase().trim())
                         filteredCards.add(card)
                 }
                 fragBinding.cardListRecycleView.adapter = CardAdapter(filteredCards, this)
             } else {
-                fragBinding.cardListRecycleView.adapter = CardAdapter(app.cards.findAll(), this)
+                fragBinding.cardListRecycleView.adapter = CardAdapter(cardListViewModel.observableCardList.value!!, this)
             }
         }
     }
