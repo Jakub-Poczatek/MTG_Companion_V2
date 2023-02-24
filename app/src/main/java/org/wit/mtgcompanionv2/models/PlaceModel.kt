@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PlaceModel(
-    var id: Short = 0,
+    var id: Int = 0,
     var name: String ="",
     var address: String = "",
     var loc: LatLng = LatLng(0.0, 0.0),
