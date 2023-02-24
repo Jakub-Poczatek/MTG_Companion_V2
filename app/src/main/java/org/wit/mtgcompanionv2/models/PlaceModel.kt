@@ -7,10 +7,10 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class PlaceModel(
     var id: Short = 0,
-    var name: String ="",
-    var address: String = "",
+    var name: String ="SampleName",
+    var address: String = "SampleAddress",
     var loc: LatLng = LatLng(0.0, 0.0),
     var rating: Double = 0.0,
-    var totalUserRatings: Int,
+    var totalUserRatings: Int = 0,
     var open: Boolean = false
 ): Parcelable

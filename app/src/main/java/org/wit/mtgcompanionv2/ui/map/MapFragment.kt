@@ -64,6 +64,7 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
 
         _fragBinding = FragmentMapBinding.inflate(inflater, container, false)
         val root = fragBinding.root
+        //_contentBinding = ContentMapBinding.bind(fragBinding.root)
         _contentBinding = ContentMapBinding.bind(fragBinding.root)
         contentBinding.mapMpVw.onCreate(savedInstanceState)
 
@@ -92,6 +93,8 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
             configureMap()
             checkLocPermissions()
         }
+
+        contentBinding.place = PlaceModel()
 
         return root
     }
@@ -123,13 +126,14 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
     override fun onMarkerClick(marker: Marker): Boolean {
         val placeId = marker.tag.toString().toShort()
         val foundPlace: PlaceModel? = places.find { p -> p.id == placeId}
-        contentBinding.mapPlaceNameTxt.text = foundPlace?.name
+        contentBinding.place = foundPlace
+        /*contentBinding.mapPlaceNameTxt.text = foundPlace?.name
         contentBinding.mapPlaceAddressTxt.text = foundPlace?.address
         contentBinding.mapPlaceLocTxt.text = foundPlace?.loc.toString()
         contentBinding.mapPlaceRatingTxt.text = foundPlace?.rating.toString()
         contentBinding.mapTotalUserRatingsTxt.text = foundPlace?.totalUserRatings.toString()
         if(foundPlace?.open!!) contentBinding.mapOpenTxt.text = "Open"
-        else contentBinding.mapOpenTxt.text = "Closed"
+        else contentBinding.mapOpenTxt.text = "Closed"*/
         return false
     }
 
