@@ -6,17 +6,17 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CardModel(
-    var id: String = "0",
-    var name: String = "SampleName",
-    var type: String = "SampleType",
-    var power: Short = 0,
-    var toughness: Short = 0,
-    var neutral: Short = 0,
-    var white: Short = 0,
-    var black: Short = 0,
-    var red: Short = 0,
-    var blue: Short = 0,
-    var green: Short = 0,
-    var description: String = "SampleDescription",
+    var id: String = "",
+    var name: String = "",
+    var type: String = "",
+    var power: Short = -1,
+    var toughness: Short = -1,
+    var neutral: Short = -1,
+    var white: Short = -1,
+    var black: Short = -1,
+    var red: Short = -1,
+    var blue: Short = -1,
+    var green: Short = -1,
+    var description: String = "",
     var image: Uri = Uri.EMPTY
 ): Parcelable

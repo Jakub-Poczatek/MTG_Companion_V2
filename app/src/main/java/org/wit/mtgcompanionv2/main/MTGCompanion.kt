@@ -2,7 +2,6 @@ package org.wit.mtgcompanionv2.main
 
 import android.app.Application
 import org.wit.mtgcompanionv2.models.CardManager
-import org.wit.mtgcompanionv2.models.CardStore
 import timber.log.Timber
 
 class MTGCompanion : Application() {
@@ -15,6 +14,7 @@ class MTGCompanion : Application() {
         //cards = CardDBStore()
         //cards = CardManager()
         //cards.findAll()
+        CardManager.findAll()
         Timber.i("DonationX Application Started")
     }
 }

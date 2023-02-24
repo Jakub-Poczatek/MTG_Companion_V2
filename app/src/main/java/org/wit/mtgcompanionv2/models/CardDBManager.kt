@@ -8,13 +8,13 @@ import timber.log.Timber.e
 import timber.log.Timber.i
 import java.util.concurrent.TimeUnit
 
-class CardDBStore: CardStore{
+object CardManager: CardStore{
 
     private var dbConnected = false
     private val db = Firebase.firestore
     //private val auth = Firebase.auth
     private val cards = ArrayList<CardModel>()
-    private val user = "defaultUser"
+    private const val user = "defaultUser"
 
     override fun findAll(): List<CardModel> {
         if(dbConnected) return cards
