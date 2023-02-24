@@ -28,7 +28,6 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.wit.mtgcompanionv2.BuildConfig.MAPS_API_KEY
 import org.wit.mtgcompanionv2.R
-import org.wit.mtgcompanionv2.databinding.ContentMapBinding
 import org.wit.mtgcompanionv2.databinding.FragmentMapBinding
 import org.wit.mtgcompanionv2.main.MTGCompanion
 import org.wit.mtgcompanionv2.models.PlaceModel
@@ -41,8 +40,6 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
     lateinit var app: MTGCompanion
     private var _fragBinding: FragmentMapBinding? = null
     private val fragBinding get() = _fragBinding!!
-    private var _contentBinding: ContentMapBinding? = null
-    private val contentBinding get() = _contentBinding!!
     private lateinit var mapViewModel: MapViewModel
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationPermissionRequest: ActivityResultLauncher<Array<String>>
@@ -65,8 +62,7 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
         _fragBinding = FragmentMapBinding.inflate(inflater, container, false)
         val root = fragBinding.root
         //_contentBinding = ContentMapBinding.bind(fragBinding.root)
-        _contentBinding = ContentMapBinding.bind(fragBinding.root)
-        contentBinding.mapMpVw.onCreate(savedInstanceState)
+        fragBinding.mapMpVw.onCreate(savedInstanceState)
 
         mapViewModel = ViewModelProvider(this)[MapViewModel::class.java]
         mapViewModel.text.observe(viewLifecycleOwner, Observer{})
@@ -88,13 +84,13 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
             }
         }
 
-        contentBinding.mapMpVw.getMapAsync {
+        fragBinding.mapMpVw.getMapAsync {
             map = it
             configureMap()
             checkLocPermissions()
         }
 
-        contentBinding.place = PlaceModel()
+        fragBinding.place = PlaceModel()
 
         return root
     }
@@ -126,35 +122,28 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
     override fun onMarkerClick(marker: Marker): Boolean {
         val placeId = marker.tag.toString().toShort()
         val foundPlace: PlaceModel? = places.find { p -> p.id == placeId}
-        contentBinding.place = foundPlace
-        /*contentBinding.mapPlaceNameTxt.text = foundPlace?.name
-        contentBinding.mapPlaceAddressTxt.text = foundPlace?.address
-        contentBinding.mapPlaceLocTxt.text = foundPlace?.loc.toString()
-        contentBinding.mapPlaceRatingTxt.text = foundPlace?.rating.toString()
-        contentBinding.mapTotalUserRatingsTxt.text = foundPlace?.totalUserRatings.toString()
-        if(foundPlace?.open!!) contentBinding.mapOpenTxt.text = "Open"
-        else contentBinding.mapOpenTxt.text = "Closed"*/
+        fragBinding.place = foundPlace
         return false
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        contentBinding.mapMpVw.onLowMemory()
+        fragBinding.mapMpVw.onLowMemory()
     }
 
     override fun onPause() {
         super.onPause()
-        contentBinding.mapMpVw.onPause()
+        fragBinding.mapMpVw.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        contentBinding.mapMpVw.onResume()
+        fragBinding.mapMpVw.onResume()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        contentBinding.mapMpVw.onSaveInstanceState(outState)
+        fragBinding.mapMpVw.onSaveInstanceState(outState)
     }
 
     @SuppressLint("MissingPermission")
@@ -206,6 +195,9 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
                 val options = MarkerOptions().title(it.name).position(it.loc)
                 map.addMarker(options)?.tag = it.id
             }
+            val foundPlace: PlaceModel? = places.find { p -> p.id == places[0].id}
+            fragBinding.place = foundPlace
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(places[0].loc, 12f))
         }
     }
 
