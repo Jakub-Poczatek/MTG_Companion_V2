@@ -42,4 +42,6 @@
     <string name="saveCard">Save Card</string>
     <string name="select_card_art">Select Card Art</string>
     <string name="menuItemDeleteCard">Delete</string>
+    <string name="cardsNotFound">No Cards Yet… \nGo Create a Card!</string>
+    <string name="cardError">Error: Couldn\'t Create a Card… </string>
 </resources>

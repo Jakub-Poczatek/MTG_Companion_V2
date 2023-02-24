@@ -3,10 +3,20 @@ package org.wit.mtgcompanionv2.ui.cardList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wit.mtgcompanionv2.models.CardManager
+import org.wit.mtgcompanionv2.models.CardModel
 
 class CardListViewModel : ViewModel() {
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is the Card List Fragment"
+    private val cardsList = MutableLiveData<List<CardModel>>()
+
+    val observableCardList: LiveData<List<CardModel>>
+        get() = cardsList
+
+    init {
+        load()
     }
-    val text: LiveData<String> = _text
+
+    fun load() {
+        cardsList.value = CardManager.findAll()
+    }
 }

@@ -3,6 +3,8 @@ package org.wit.mtgcompanionv2.ui.card
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
@@ -32,6 +35,7 @@ class CardFragment : Fragment() {
     private var card = CardModel()
     private lateinit var imageIntentLauncher: ActivityResultLauncher<Intent>
     private lateinit var navController: NavController
+    private val args by navArgs<CardFragmentArgs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +50,10 @@ class CardFragment : Fragment() {
         val root = fragBinding.root
         activity?.title = getString(R.string.cardActivityTitle)
         cardViewModel = ViewModelProvider(this)[CardViewModel::class.java]
-        cardViewModel.text.observe(viewLifecycleOwner) {
-        }
+        cardViewModel.observableStatus.observe(viewLifecycleOwner, Observer {
+            status -> status?.let { render(status) }
+        })
+
         setAddButtonListener(fragBinding)
 
         registerImagePickerCallback()
@@ -58,6 +64,18 @@ class CardFragment : Fragment() {
         return root
     }
 
+    private fun render(status: Boolean) {
+        when (status) {
+            true -> {
+                view?.let {
+                    //Uncomment this if you want to immediately return to Report
+                    //findNavController().popBackStack()
+                }
+            }
+            false -> Toast.makeText(context, getString(R.string.cardError), Toast.LENGTH_LONG).show()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_card, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -66,7 +84,8 @@ class CardFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.menuItemDeleteCard -> {
-                app.cards.delete(card)
+                //app.cards.delete(card)
+                cardViewModel.deleteCard(card)
                 navController.popBackStack()
             }
         }
@@ -81,16 +100,14 @@ class CardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (requireArguments().getBoolean("edit")) {
-            setCard(requireArguments().getParcelable("card")!!)
+        if (args.edit) {
+            setCard(args.card!!)
             setHasOptionsMenu(true)
         } else {
+            fragBinding.card = CardModel()
             defaultAllFields()
             setHasOptionsMenu(false)
         }
-        val cardViewModel = ViewModelProvider(this)[CardViewModel::class.java]
-        cardViewModel.text.observe(viewLifecycleOwner, Observer{
-        })
     }
 
     private fun resetViewAttributes() {
@@ -110,21 +127,13 @@ class CardFragment : Fragment() {
     private fun setCard(card: CardModel){
         this.card = card
         fragBinding.addCardBtn.setText(R.string.saveCard)
-        fragBinding.cardNameTxt.setText(card.name)
+        //fragBinding.cardNameTxt.setText(card.name)
         fragBinding.cardTypeSpinner.resources.getStringArray(R.array.cardTypes).forEachIndexed{ index, element ->
             if (element == card.type) {
                 fragBinding.cardTypeSpinner.setSelection(index)
             }
         }
-        fragBinding.cardPowerNumTxt.setText(card.power.toString())
-        fragBinding.cardToughnessNumTxt.setText(card.toughness.toString())
-        fragBinding.cardNeuCostNumTxt.setText(card.neutral.toString())
-        fragBinding.cardWhtCostNumTxt.setText(card.white.toString())
-        fragBinding.cardBlkCostNumTxt.setText(card.black.toString())
-        fragBinding.cardRedCostNumTxt.setText(card.red.toString())
-        fragBinding.cardBluCostNumTxt.setText(card.blue.toString())
-        fragBinding.cardGrnCostNumTxt.setText(card.green.toString())
-        fragBinding.cardDescriptionMLTxt.setText(card.description)
+        fragBinding.card = card
         Picasso.get().load(card.image).into(fragBinding.cardArtImgVw)
     }
 
@@ -144,52 +153,42 @@ class CardFragment : Fragment() {
             card.description = layout.cardDescriptionMLTxt.text.toString()
 
             if(card.name.isNotEmpty()) {
-                if(requireArguments().getBoolean("edit")) {
-                    app.cards.update(card.copy())
+                if(args.edit) {
+                    //app.cards.update(card.copy())
+                    cardViewModel.updateCard(card)
                     navController.popBackStack()
                 } else {
-                    app.cards.create(card.copy())
+                    //app.cards.create(card.copy())
+                    cardViewModel.addCard(card)
                     defaultAllFields()
-                    if(requireArguments().getBoolean("quickAdd"))
+                    if(args.quickAdd)
                         navController.popBackStack()
                 }
             } else {
                 Snackbar.make(it, R.string.InvalidCardName, Snackbar.LENGTH_LONG).show()
+
             }
         }
     }
 
     private fun defaultNumericFieldsIfInvalid(layout: FragmentCardBinding){
-        if(layout.cardPowerNumTxt.text.isEmpty())
-            layout.cardPowerNumTxt.setText("0")
-        if(layout.cardToughnessNumTxt.text.isEmpty())
-            layout.cardToughnessNumTxt.setText(("0"))
-        if(layout.cardNeuCostNumTxt.text.isEmpty())
-            layout.cardNeuCostNumTxt.setText(("0"))
-        if(layout.cardWhtCostNumTxt.text.isEmpty())
-            layout.cardWhtCostNumTxt.setText(("0"))
-        if(layout.cardBlkCostNumTxt.text.isEmpty())
-            layout.cardBlkCostNumTxt.setText(("0"))
-        if(layout.cardRedCostNumTxt.text.isEmpty())
-            layout.cardRedCostNumTxt.setText(("0"))
-        if(layout.cardBluCostNumTxt.text.isEmpty())
-            layout.cardBluCostNumTxt.setText(("0"))
-        if(layout.cardGrnCostNumTxt.text.isEmpty())
-            layout.cardGrnCostNumTxt.setText(("0"))
+        fun zeroField(element: EditText){
+            if(element.text.isEmpty())
+                element.setText("0")
+        }
+        zeroField(layout.cardPowerNumTxt)
+        zeroField(layout.cardToughnessNumTxt)
+        zeroField(layout.cardNeuCostNumTxt)
+        zeroField(layout.cardWhtCostNumTxt)
+        zeroField(layout.cardBlkCostNumTxt)
+        zeroField(layout.cardRedCostNumTxt)
+        zeroField(layout.cardBluCostNumTxt)
+        zeroField(layout.cardGrnCostNumTxt)
     }
 
     private fun defaultAllFields(){
-        fragBinding.cardNameTxt.text.clear()
         fragBinding.cardTypeSpinner.setSelection(0)
-        fragBinding.cardPowerNumTxt.text.clear()
-        fragBinding.cardToughnessNumTxt.text.clear()
-        fragBinding.cardNeuCostNumTxt.text.clear()
-        fragBinding.cardWhtCostNumTxt.text.clear()
-        fragBinding.cardBlkCostNumTxt.text.clear()
-        fragBinding.cardRedCostNumTxt.text.clear()
-        fragBinding.cardBluCostNumTxt.text.clear()
-        fragBinding.cardGrnCostNumTxt.text.clear()
-        fragBinding.cardDescriptionMLTxt.text.clear()
+        fragBinding.card = CardModel()
         fragBinding.cardArtImgVw.setImageResource(R.drawable.ic_default_card_art)
     }
 

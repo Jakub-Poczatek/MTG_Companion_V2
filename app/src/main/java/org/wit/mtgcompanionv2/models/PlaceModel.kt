@@ -11,6 +11,6 @@ data class PlaceModel(
     var address: String = "",
     var loc: LatLng = LatLng(0.0, 0.0),
     var rating: Double = 0.0,
-    var totalUserRatings: Int,
+    var totalUserRatings: Int = 0,
     var open: Boolean = false
 ): Parcelable

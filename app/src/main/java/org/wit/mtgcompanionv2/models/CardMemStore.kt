@@ -8,7 +8,7 @@ internal fun getId(): Long {
     return lastId++
 }
 
-class CardMemStore: CardStore {
+object StaticCardMemStore: CardStore {
 
     private val cards = ArrayList<CardModel>()
 
