@@ -37,6 +37,10 @@ object CardManager: CardStore{
                             blue = document.get("blue").toString().toShort(),
                             green = document.get("green").toString().toShort(),
                             description = document.getString("description")!!,
+                            rarity = Rarity.valueOf(document.getString("rarity")!!),
+                            colours = convertColours(document.get("colours") as List<String>),
+                            set = document.get("set").toString(),
+                            value = document.get("value").toString().toDouble(),
                             image = document.getString("image")!!.toUri()
                         )
                         cards.add(card)
@@ -64,16 +68,20 @@ object CardManager: CardStore{
 
     override fun create(card: CardModel) {
         //val user = auth.currentUser?.email.toString()
-        db.collection(user).add(cardToHash(card))
+        var foundCard: CardModel? = CardModel()
+        var cardHash: HashMap<String, Any> = cardToHash(card)
+
+        db.collection(user).add(cardHash)
             .addOnSuccessListener { documentRef ->
-                i("Card added with ID: ${documentRef.id}")
-                val foundCard: CardModel? = cards.find { c -> c.id == card.id }
+                foundCard = cards.find { c -> c.id == card.id }
                 foundCard?.id = documentRef.id
 
+                db.collection("AllCards").document(documentRef.id).set(cardHash)
             }
             .addOnFailureListener { error ->
                 e("Error adding card: \n$error")
             }
+
         cards.add(card)
     }
 
@@ -99,6 +107,10 @@ object CardManager: CardStore{
             foundCard.blue = card.blue
             foundCard.green = card.green
             foundCard.description = card.description
+            foundCard.rarity = card.rarity
+            foundCard.colours = card.colours
+            foundCard.set = card.set
+            foundCard.value = card.value
             foundCard.image = card.image
         }
     }
@@ -115,7 +127,7 @@ object CardManager: CardStore{
         cards.remove(card)
     }
 
-    private fun cardToHash(card: CardModel): HashMap<String, Comparable<*>> {
+    private fun cardToHash(card: CardModel): HashMap<String, Any> {
         return hashMapOf(
             "name" to card.name,
             "type" to card.type,
@@ -128,7 +140,19 @@ object CardManager: CardStore{
             "blue" to card.blue.toInt(),
             "green" to card.green.toInt(),
             "description" to card.description,
+            "rarity" to card.rarity.toString(),
+            "colours" to card.colours,
+            "set" to card.set,
+            "value" to card.value,
             "image" to card.image
         )
+    }
+
+    private fun convertColours(list: List<String>): MutableList<Colour> {
+        val convertedColours: MutableList<Colour> = ArrayList<Colour>()
+        list.forEach {
+            convertedColours.add(Colour.valueOf(it))
+        }
+        return convertedColours
     }
 }

@@ -302,6 +302,37 @@
             app:layout_constraintStart_toEndOf="@+id/cardDescriptionMLTxt"
             app:layout_constraintTop_toBottomOf="@+id/cardFragmentGrnPicker" />
 
+        <EditText
+            android:id="@+id/cardFragmentSetEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/cardSet"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:text="@{card.set}"
+            app:layout_constraintEnd_toEndOf="@+id/cardRaritySpinner"
+            app:layout_constraintStart_toStartOf="@+id/cardRaritySpinner"
+            app:layout_constraintTop_toBottomOf="@+id/cardRaritySpinner" />
+
+        <EditText
+            android:id="@+id/cardFragmentValueEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/cardValue"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:minHeight="48dp"
+            android:textColorHint="#757575"
+            android:text="@{card.value >= 0.0 ? Double.toString(card.value) : ``}"
+            app:layout_constraintEnd_toEndOf="@+id/cardFragmentSetEdit"
+            app:layout_constraintStart_toStartOf="@+id/cardFragmentSetEdit"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentSetEdit" />
+
         <Button
             android:id="@+id/addCardBtn"
             android:layout_width="0dp"
@@ -314,35 +345,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <EditText
-            android:id="@+id/cardFragmentSetEdit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="@string/cardSet"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            app:layout_constraintEnd_toEndOf="@+id/cardRaritySpinner"
-            app:layout_constraintStart_toStartOf="@+id/cardRaritySpinner"
-            app:layout_constraintTop_toBottomOf="@+id/cardRaritySpinner"
-            android:importantForAutofill="no" />
-
-        <EditText
-            android:id="@+id/editTextNumberDecimal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:ems="10"
-            android:hint="@string/cardValue"
-            android:inputType="numberDecimal"
-            android:minHeight="48dp"
-            android:textColorHint="#757575"
-            app:layout_constraintEnd_toEndOf="@+id/cardFragmentSetEdit"
-            app:layout_constraintStart_toStartOf="@+id/cardFragmentSetEdit"
-            app:layout_constraintTop_toBottomOf="@+id/cardFragmentSetEdit"
-            android:importantForAutofill="no" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

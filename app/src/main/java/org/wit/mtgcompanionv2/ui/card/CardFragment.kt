@@ -3,7 +3,6 @@ package org.wit.mtgcompanionv2.ui.card
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -24,6 +23,8 @@ import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.databinding.FragmentCardBinding
 import org.wit.mtgcompanionv2.main.MTGCompanion
 import org.wit.mtgcompanionv2.models.CardModel
+import org.wit.mtgcompanionv2.models.Colour
+import org.wit.mtgcompanionv2.models.Rarity
 import timber.log.Timber.i
 
 
@@ -37,6 +38,7 @@ class CardFragment : Fragment() {
     private lateinit var imageIntentLauncher: ActivityResultLauncher<Intent>
     private lateinit var navController: NavController
     private val args by navArgs<CardFragmentArgs>()
+    private var fetchingImage: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,8 +114,11 @@ class CardFragment : Fragment() {
             setCard(args.card!!)
             setHasOptionsMenu(true)
         } else {
-            fragBinding.card = CardModel()
-            defaultAllFields()
+            if(!fetchingImage) {
+                fragBinding.card = CardModel()
+                defaultAllFields()
+                fetchingImage = false
+            }
             setHasOptionsMenu(false)
         }
     }
@@ -141,13 +146,16 @@ class CardFragment : Fragment() {
                 fragBinding.cardTypeSpinner.setSelection(index)
             }
         }
+        fragBinding.cardRaritySpinner.resources.getStringArray(R.array.rarities).forEachIndexed { index, element ->
+            if (element == card.rarity.toString())
+                fragBinding.cardRaritySpinner.setSelection(index)
+        }
         fragBinding.card = card
         Picasso.get().load(card.image).into(fragBinding.cardArtImgVw)
     }
 
     private fun setAddButtonListener(layout: FragmentCardBinding) {
         layout.addCardBtn.setOnClickListener {
-            defaultNumericFieldsIfInvalid(layout)
             card.name = layout.cardNameTxt.text.toString()
             card.type = layout.cardTypeSpinner.selectedItem.toString()
             card.power = layout.cardFragmentPowerSeeker.progress.toShort()
@@ -159,6 +167,13 @@ class CardFragment : Fragment() {
             card.blue = layout.cardFragmentBluPicker.value.toShort()
             card.green = layout.cardFragmentGrnPicker.value.toShort()
             card.description = layout.cardDescriptionMLTxt.text.toString()
+            card.rarity = Rarity.valueOf(layout.cardRaritySpinner.selectedItem.toString())
+            card.set = layout.cardFragmentSetEdit.text.toString()
+            if(layout.cardFragmentValueEdit.text.isNotEmpty())
+                card.value = layout.cardFragmentValueEdit.text.toString().toDouble()
+            else
+                card.value = 0.0
+            assignColors(card)
 
             if(card.name.isNotEmpty()) {
                 if(args.edit) {
@@ -179,21 +194,6 @@ class CardFragment : Fragment() {
         }
     }
 
-    private fun defaultNumericFieldsIfInvalid(layout: FragmentCardBinding){
-        fun zeroField(element: EditText){
-            if(element.text.isEmpty())
-                element.setText("0")
-        }
-        //zeroField(layout.cardPowerNumTxt)
-        //zeroField(layout.cardToughnessNumTxt)
-        /*zeroField(layout.cardNeuCostNumTxt)
-        zeroField(layout.cardWhtCostNumTxt)
-        zeroField(layout.cardBlkCostNumTxt)
-        zeroField(layout.cardRedCostNumTxt)
-        zeroField(layout.cardBluCostNumTxt)
-        zeroField(layout.cardGrnCostNumTxt)*/
-    }
-
     private fun setRangeOfNumberPickers(picker: NumberPicker){
         picker.minValue = 0
         picker.maxValue = 10
@@ -203,6 +203,21 @@ class CardFragment : Fragment() {
         fragBinding.cardTypeSpinner.setSelection(0)
         fragBinding.card = CardModel()
         fragBinding.cardArtImgVw.setImageResource(R.drawable.ic_default_card_art)
+    }
+
+    private fun assignColors(card: CardModel){
+        if(card.neutral > 0)
+            card.colours.add(Colour.Neutral)
+        if(card.white > 0)
+            card.colours.add(Colour.White)
+        if(card.black > 0)
+            card.colours.add(Colour.Black)
+        if(card.red > 0)
+            card.colours.add(Colour.Red)
+        if(card.blue > 0)
+            card.colours.add(Colour.Blue)
+        if(card.green > 0)
+            card.colours.add(Colour.Green)
     }
 
     private fun registerImagePickerCallback() {
@@ -217,7 +232,7 @@ class CardFragment : Fragment() {
                         val image = result.data!!.data!!
                         requireContext().contentResolver.takePersistableUriPermission(image, Intent.FLAG_GRANT_READ_URI_PERMISSION)
                         card.image = image
-
+                        fetchingImage = true
                         Picasso.get().load(card.image).into(fragBinding.cardArtImgVw)
                     }
                 }

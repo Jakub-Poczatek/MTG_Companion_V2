@@ -19,7 +19,7 @@ data class CardModel(
     var green: Short = 0,
     var description: String = "",
     var rarity: Rarity = Rarity.Common,
-    var colors: List<Colour> = ArrayList<Colour>(),
+    var colours: MutableList<Colour> = ArrayList<Colour>(),
     var set: String = "",
     var value: Double = -1.0,
     var image: Uri = Uri.EMPTY
