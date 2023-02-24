@@ -19,4 +19,10 @@
         <item>name</item>
         <item>type</item>
     </string-array>
+    <string-array name="rarities">
+        <item>Common</item>
+        <item>Uncommon</item>
+        <item>Rare</item>
+        <item>Mythic</item>
+    </string-array>
 </resources>

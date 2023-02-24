@@ -3,12 +3,15 @@ package org.wit.mtgcompanionv2.ui.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -18,6 +21,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -33,6 +38,7 @@ import org.wit.mtgcompanionv2.main.MTGCompanion
 import org.wit.mtgcompanionv2.models.PlaceModel
 import org.wit.mtgcompanionv2.ui.card.CardFragment
 import timber.log.Timber
+import timber.log.Timber.e
 import timber.log.Timber.i
 
 class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
@@ -120,7 +126,7 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
 
     @SuppressLint("SetTextI18n")
     override fun onMarkerClick(marker: Marker): Boolean {
-        val placeId = marker.tag.toString().toShort()
+        val placeId = marker.tag
         val foundPlace: PlaceModel? = places.find { p -> p.id == placeId}
         fragBinding.place = foundPlace
         return false
@@ -153,6 +159,10 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
                 .addOnSuccessListener { result ->
                     loc = LatLng(result.latitude, result.longitude)
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 12f))
+                    val usersPosition: PlaceModel = PlaceModel(0, "You", "Your current position", loc, 0.0, 0, false)
+                    places.add(usersPosition)
+                    map.addMarker(MarkerOptions().title(usersPosition.name).position(usersPosition.loc)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)))!!.tag = usersPosition.id
                     findCardShops()
                 }
                 .addOnFailureListener { error ->
@@ -170,28 +180,34 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
             val url =
                 "https://maps.googleapis.com/maps/api/place/textsearch/json?query=card%20game%20shops%20near%20me&location=${loc.latitude}%2C${loc.longitude}&radius=10000&key=$MAPS_API_KEY"
             val response = client.get(url)
-            //i("${response.body<String>()}")
+            i("${response.body<String>()}")
             val copy = JSONObject(response.body<String>())
             //i("${copy.getJSONArray("results").getJSONObject(0)}")
             for(j in 0 until copy.getJSONArray("results").length()){
                 val docPlace = copy.getJSONArray("results").getJSONObject(j)
-                val place = PlaceModel(
-                    id = j.toShort(),
-                    name = docPlace.getString("name"),
-                    address = docPlace.getString("formatted_address"),
-                    loc = LatLng(
-                        docPlace.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
-                        docPlace.getJSONObject("geometry").getJSONObject("location").getDouble("lng")
-                    ),
-                    rating = docPlace.getDouble("rating"),
-                    totalUserRatings = docPlace.getInt("user_ratings_total"),
-                    open = docPlace.getJSONObject("opening_hours").getBoolean("open_now")
-                )
-                places.add(place)
+                try {
+                    val place = PlaceModel(
+                        id = j+1,
+                        name = docPlace.getString("name"),
+                        address = docPlace.getString("formatted_address"),
+                        loc = LatLng(
+                            docPlace.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
+                            docPlace.getJSONObject("geometry").getJSONObject("location").getDouble("lng")
+                        ),
+                        rating = docPlace.getDouble("rating"),
+                        totalUserRatings = docPlace.getInt("user_ratings_total"),
+                        open = docPlace.getJSONObject("opening_hours").getBoolean("open_now")
+                    )
+                    places.add(place)
+                } catch (e: java.lang.Exception) {
+                    e("Can't fetch place")
+                }
                 //i("${copy.getJSONArray("results").getJSONObject(j).get("name")}")
             }
             places.forEach{
-                Timber.i("$it")
+                if(it.id == 0)
+                    return@forEach
+                //Timber.i("$it")
                 val options = MarkerOptions().title(it.name).position(it.loc)
                 map.addMarker(options)?.tag = it.id
             }
