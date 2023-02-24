@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.EditText
+import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -60,6 +61,13 @@ class CardFragment : Fragment() {
         fragBinding.cardArtImgVw.setOnClickListener{
             showImagePicker(imageIntentLauncher, requireContext())
         }
+
+        setRangeOfNumberPickers(fragBinding.cardFragmentNtrlPicker)
+        setRangeOfNumberPickers(fragBinding.cardFragmentWhtPicker)
+        setRangeOfNumberPickers(fragBinding.cardFragmentBlkPicker)
+        setRangeOfNumberPickers(fragBinding.cardFragmentRedPicker)
+        setRangeOfNumberPickers(fragBinding.cardFragmentBluPicker)
+        setRangeOfNumberPickers(fragBinding.cardFragmentGrnPicker)
 
         return root
     }
@@ -142,14 +150,14 @@ class CardFragment : Fragment() {
             defaultNumericFieldsIfInvalid(layout)
             card.name = layout.cardNameTxt.text.toString()
             card.type = layout.cardTypeSpinner.selectedItem.toString()
-            card.power = layout.cardPowerNumTxt.text.toString().toShort()
-            card.toughness = layout.cardToughnessNumTxt.text.toString().toShort()
-            card.neutral = layout.cardNeuCostNumTxt.text.toString().toShort()
-            card.white = layout.cardWhtCostNumTxt.text.toString().toShort()
-            card.black = layout.cardBlkCostNumTxt.text.toString().toShort()
-            card.red = layout.cardRedCostNumTxt.text.toString().toShort()
-            card.blue = layout.cardBluCostNumTxt.text.toString().toShort()
-            card.green = layout.cardGrnCostNumTxt.text.toString().toShort()
+            card.power = layout.cardFragmentPowerSeeker.progress.toShort()
+            card.toughness = layout.cardFragmentToughnessSeeker.progress.toShort()
+            card.neutral = layout.cardFragmentNtrlPicker.value.toShort()
+            card.white = layout.cardFragmentWhtPicker.value.toShort()
+            card.black = layout.cardFragmentBlkPicker.value.toShort()
+            card.red = layout.cardFragmentRedPicker.value.toShort()
+            card.blue = layout.cardFragmentBluPicker.value.toShort()
+            card.green = layout.cardFragmentGrnPicker.value.toShort()
             card.description = layout.cardDescriptionMLTxt.text.toString()
 
             if(card.name.isNotEmpty()) {
@@ -176,14 +184,19 @@ class CardFragment : Fragment() {
             if(element.text.isEmpty())
                 element.setText("0")
         }
-        zeroField(layout.cardPowerNumTxt)
-        zeroField(layout.cardToughnessNumTxt)
-        zeroField(layout.cardNeuCostNumTxt)
+        //zeroField(layout.cardPowerNumTxt)
+        //zeroField(layout.cardToughnessNumTxt)
+        /*zeroField(layout.cardNeuCostNumTxt)
         zeroField(layout.cardWhtCostNumTxt)
         zeroField(layout.cardBlkCostNumTxt)
         zeroField(layout.cardRedCostNumTxt)
         zeroField(layout.cardBluCostNumTxt)
-        zeroField(layout.cardGrnCostNumTxt)
+        zeroField(layout.cardGrnCostNumTxt)*/
+    }
+
+    private fun setRangeOfNumberPickers(picker: NumberPicker){
+        picker.minValue = 0
+        picker.maxValue = 10
     }
 
     private fun defaultAllFields(){

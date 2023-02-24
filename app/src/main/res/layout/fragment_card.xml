@@ -23,7 +23,7 @@
             android:contentDescription="@string/cardImageDescription"
             android:scaleType="fitXY"
             android:src="@android:drawable/ic_menu_gallery"
-            app:layout_constraintBottom_toBottomOf="@id/cardPowerNumTxt"
+            app:layout_constraintBottom_toBottomOf="@+id/cardFragmentToughnessSeeker"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/cardNameTxt"
             app:layout_constraintTop_toTopOf="@id/cardNameTxt"
@@ -44,6 +44,7 @@
             android:minHeight="48dp"
             android:text="@{card.name}"
             app:layout_constraintEnd_toStartOf="@id/cardArtImgVw"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="TextContrastCheck" />
@@ -60,171 +61,246 @@
             app:layout_constraintStart_toStartOf="@id/cardNameTxt"
             app:layout_constraintTop_toBottomOf="@id/cardNameTxt" />
 
-        <EditText
-            android:id="@+id/cardPowerNumTxt"
+        <TextView
+            android:id="@+id/cardFragmentPowerLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/cardPower"
+            android:textSize="11sp"
+            app:layout_constraintEnd_toEndOf="@+id/cardTypeSpinner"
+            app:layout_constraintStart_toStartOf="@+id/cardTypeSpinner"
+            app:layout_constraintTop_toBottomOf="@+id/cardTypeSpinner" />
+
+        <SeekBar
+            android:id="@+id/cardFragmentToughnessSeeker"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="0dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="4dp"
+            android:max="10"
+            android:progress="@{card.power}"
+            app:layout_constraintEnd_toEndOf="@+id/cardFragmentPowerSeeker"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/cardFragmentPowerSeeker"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentToughnessLbl" />
+
+        <TextView
+            android:id="@+id/cardFragmentToughnessLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/cardToughness"
+            android:textSize="11sp"
+            app:layout_constraintEnd_toEndOf="@+id/cardTypeSpinner"
+            app:layout_constraintStart_toStartOf="@+id/cardTypeSpinner"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentPowerSeeker" />
+
+        <SeekBar
+            android:id="@+id/cardFragmentPowerSeeker"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="0dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="4dp"
+            android:max="10"
+            android:progress="@{card.toughness}"
+            app:layout_constraintEnd_toEndOf="@+id/cardTypeSpinner"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/cardTypeSpinner"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentPowerLbl" />
+
+        <TextView
+            android:id="@+id/cardFragmentNtrlLbl"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
-            android:ems="10"
-            android:hint="@string/cardPower"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:maxLength="3"
-            android:minHeight="48dp"
-            android:text="@{card.power >= 0 ? Integer.toString(card.power) : ``}"
-            app:layout_constraintEnd_toStartOf="@id/cardToughnessNumTxt"
-            app:layout_constraintStart_toStartOf="@id/cardNameTxt"
-            app:layout_constraintTop_toBottomOf="@id/cardTypeSpinner"
-            tools:ignore="TextContrastCheck" />
+            android:text="@string/cardColourNeutral"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toStartOf="@+id/cardFragmentWhtLbl"
+            app:layout_constraintStart_toStartOf="@+id/cardFragmentToughnessSeeker"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentToughnessSeeker" />
 
-        <EditText
-            android:id="@+id/cardToughnessNumTxt"
+        <NumberPicker
+            android:id="@+id/cardFragmentNtrlPicker"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:value="@{card.neutral}"
+            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintEnd_toEndOf="@+id/cardFragmentNtrlLbl"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/cardFragmentNtrlLbl"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentNtrlLbl"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/cardFragmentWhtLbl"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:ems="10"
-            android:hint="@string/cardToughness"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:maxLength="3"
-            android:minHeight="48dp"
-            android:text="@{card.toughness >= 0 ? Integer.toString(card.toughness) : ``}"
-            app:layout_constraintEnd_toEndOf="@id/cardNameTxt"
-            app:layout_constraintStart_toEndOf="@id/cardPowerNumTxt"
-            app:layout_constraintTop_toBottomOf="@id/cardTypeSpinner"
-            tools:ignore="TextContrastCheck" />
+            android:layout_marginEnd="8dp"
+            android:text="@string/cardColourWhite"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@+id/cardFragmentNtrlLbl"
+            app:layout_constraintEnd_toStartOf="@+id/cardFragmentBlkLbl"
+            app:layout_constraintStart_toEndOf="@+id/cardFragmentNtrlLbl"
+            app:layout_constraintTop_toTopOf="@+id/cardFragmentNtrlLbl"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <EditText
-            android:id="@+id/cardNeuCostNumTxt"
+        <NumberPicker
+            android:id="@+id/cardFragmentWhtPicker"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:value="@{card.white}"
+            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintEnd_toEndOf="@+id/cardFragmentWhtLbl"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/cardFragmentWhtLbl"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentWhtLbl"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/cardFragmentBlkLbl"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="2dp"
-            android:ems="10"
-            android:hint="@string/cardNeuCost"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:maxLength="3"
-            android:minHeight="48dp"
-            android:text="@{card.neutral >= 0 ? Integer.toString(card.neutral) : ``}"
-            app:layout_constraintEnd_toStartOf="@id/cardWhtCostNumTxt"
-            app:layout_constraintStart_toStartOf="@id/cardNameTxt"
-            app:layout_constraintTop_toBottomOf="@id/cardPowerNumTxt"
-            tools:ignore="TextContrastCheck" />
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/cardColourBlack"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@+id/cardFragmentWhtLbl"
+            app:layout_constraintEnd_toStartOf="@+id/cardFragmentRedLbl"
+            app:layout_constraintStart_toEndOf="@+id/cardFragmentWhtLbl"
+            app:layout_constraintTop_toTopOf="@+id/cardFragmentWhtLbl"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <EditText
-            android:id="@+id/cardWhtCostNumTxt"
+        <NumberPicker
+            android:id="@+id/cardFragmentBlkPicker"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:value="@{card.black}"
+            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintEnd_toEndOf="@+id/cardFragmentBlkLbl"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/cardFragmentBlkLbl"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentBlkLbl"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/cardFragmentRedLbl"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="2dp"
-            android:ems="10"
-            android:hint="@string/cardWhtCost"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:maxLength="3"
-            android:minHeight="48dp"
-            android:text="@{card.white >= 0 ? Integer.toString(card.white) : ``}"
-            app:layout_constraintEnd_toStartOf="@id/cardBlkCostNumTxt"
-            app:layout_constraintStart_toEndOf="@id/cardNeuCostNumTxt"
-            app:layout_constraintTop_toBottomOf="@id/cardPowerNumTxt"
-            tools:ignore="TextContrastCheck" />
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/cardColourRed"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@+id/cardFragmentBlkLbl"
+            app:layout_constraintEnd_toStartOf="@+id/cardFragmentBluLbl"
+            app:layout_constraintStart_toEndOf="@+id/cardFragmentBlkLbl"
+            app:layout_constraintTop_toTopOf="@+id/cardFragmentBlkLbl"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <EditText
-            android:id="@+id/cardBlkCostNumTxt"
+        <NumberPicker
+            android:id="@+id/cardFragmentRedPicker"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:value="@{card.red}"
+            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintEnd_toEndOf="@+id/cardFragmentRedLbl"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/cardFragmentRedLbl"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentRedLbl"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/cardFragmentBluLbl"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="2dp"
-            android:ems="10"
-            android:hint="@string/cardBlkCost"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:maxLength="3"
-            android:minHeight="48dp"
-            android:text="@{card.black >= 0 ? Integer.toString(card.black) : ``}"
-            app:layout_constraintEnd_toStartOf="@id/cardRedCostNumTxt"
-            app:layout_constraintStart_toEndOf="@id/cardWhtCostNumTxt"
-            app:layout_constraintTop_toBottomOf="@id/cardPowerNumTxt"
-            tools:ignore="TextContrastCheck" />
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/cardColourBlue"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@+id/cardFragmentRedLbl"
+            app:layout_constraintEnd_toStartOf="@+id/cardFragmentGrnLbl"
+            app:layout_constraintStart_toEndOf="@+id/cardFragmentRedLbl"
+            app:layout_constraintTop_toTopOf="@+id/cardFragmentRedLbl"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <EditText
-            android:id="@+id/cardRedCostNumTxt"
+        <NumberPicker
+            android:id="@+id/cardFragmentBluPicker"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:value="@{card.blue}"
+            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintEnd_toEndOf="@+id/cardFragmentBluLbl"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/cardFragmentBluLbl"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentBluLbl"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/cardFragmentGrnLbl"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="2dp"
-            android:ems="10"
-            android:hint="@string/cardRedCost"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:maxLength="3"
-            android:minHeight="48dp"
-            android:text="@{card.red >= 0 ? Integer.toString(card.red) : ``}"
-            app:layout_constraintEnd_toStartOf="@id/cardBluCostNumTxt"
-            app:layout_constraintStart_toEndOf="@id/cardBlkCostNumTxt"
-            app:layout_constraintTop_toBottomOf="@id/cardPowerNumTxt"
-            tools:ignore="TextContrastCheck" />
+            android:layout_marginStart="8dp"
+            android:text="@string/cardColourGreen"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@+id/cardFragmentBluLbl"
+            app:layout_constraintEnd_toEndOf="@+id/cardArtImgVw"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/cardFragmentBluLbl"
+            app:layout_constraintTop_toTopOf="@+id/cardFragmentBluLbl"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <EditText
-            android:id="@+id/cardBluCostNumTxt"
+        <NumberPicker
+            android:id="@+id/cardFragmentGrnPicker"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="2dp"
-            android:ems="10"
-            android:hint="@string/cardBluCost"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:maxLength="3"
-            android:minHeight="48dp"
-            android:text="@{card.blue >= 0 ? Integer.toString(card.blue) : ``}"
-            app:layout_constraintEnd_toStartOf="@id/cardGrnCostNumTxt"
-            app:layout_constraintStart_toEndOf="@id/cardRedCostNumTxt"
-            app:layout_constraintTop_toBottomOf="@id/cardPowerNumTxt"
-            tools:ignore="TextContrastCheck" />
-
-        <EditText
-            android:id="@+id/cardGrnCostNumTxt"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="2dp"
-            android:ems="10"
-            android:hint="@string/cardGrnCost"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:maxLength="3"
-            android:minHeight="48dp"
-            android:text="@{card.green >= 0 ? Integer.toString(card.green) : ``}"
-            app:layout_constraintEnd_toEndOf="@id/cardArtImgVw"
-            app:layout_constraintStart_toEndOf="@id/cardBluCostNumTxt"
-            app:layout_constraintTop_toBottomOf="@id/cardPowerNumTxt"
-            tools:ignore="TextContrastCheck" />
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:value="@{card.green}"
+            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintEnd_toEndOf="@+id/cardFragmentGrnLbl"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/cardFragmentGrnLbl"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentGrnLbl"
+            app:layout_constraintVertical_bias="0.0" />
 
         <EditText
             android:id="@+id/cardDescriptionMLTxt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:ems="10"
             android:gravity="start|top"
             android:hint="@string/cardDescription"
             android:importantForAutofill="no"
             android:inputType="textMultiLine"
-            android:maxHeight="256dp"
+            android:maxHeight="144dp"
             android:minHeight="48dp"
             android:text="@{card.description}"
-            app:layout_constraintEnd_toEndOf="@id/cardGrnCostNumTxt"
-            app:layout_constraintStart_toStartOf="@id/cardNameTxt"
-            app:layout_constraintTop_toBottomOf="@id/cardNeuCostNumTxt" />
+            android:textColorHint="#757575"
+            app:layout_constraintEnd_toStartOf="@+id/cardRaritySpinner"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/cardFragmentNtrlPicker"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentNtrlPicker" />
+
+        <Spinner
+            android:id="@+id/cardRaritySpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:entries="@array/rarities"
+            android:minHeight="48dp"
+            android:spinnerMode="dropdown"
+            app:layout_constraintEnd_toEndOf="@+id/cardFragmentGrnPicker"
+            app:layout_constraintStart_toEndOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentGrnPicker" />
 
         <Button
             android:id="@+id/addCardBtn"
@@ -232,11 +308,41 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginBottom="64dp"
+            android:layout_marginBottom="24dp"
             android:text="@string/button_addCard"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/cardFragmentSetEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/cardSet"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            app:layout_constraintEnd_toEndOf="@+id/cardRaritySpinner"
+            app:layout_constraintStart_toStartOf="@+id/cardRaritySpinner"
+            app:layout_constraintTop_toBottomOf="@+id/cardRaritySpinner"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/editTextNumberDecimal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/cardValue"
+            android:inputType="numberDecimal"
+            android:minHeight="48dp"
+            android:textColorHint="#757575"
+            app:layout_constraintEnd_toEndOf="@+id/cardFragmentSetEdit"
+            app:layout_constraintStart_toStartOf="@+id/cardFragmentSetEdit"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentSetEdit"
+            android:importantForAutofill="no" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

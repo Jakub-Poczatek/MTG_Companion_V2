@@ -44,4 +44,12 @@
     <string name="menuItemDeleteCard">Delete</string>
     <string name="cardsNotFound">No Cards Yet… \nGo Create a Card!</string>
     <string name="cardError">Error: Couldn\'t Create a Card… </string>
+    <string name="cardColourNeutral">Neutral</string>
+    <string name="cardColourWhite">White</string>
+    <string name="cardColourBlack">Black</string>
+    <string name="cardColourRed">Red</string>
+    <string name="cardColourBlue">Blue</string>
+    <string name="cardColourGreen">Green</string>
+    <string name="cardSet">Set</string>
+    <string name="cardValue">Value</string>
 </resources>
