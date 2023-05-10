@@ -75,8 +75,8 @@ object FirebaseDBManager: CardStore {
             return
         }
         card.uid = key
-        card.image = "${FirebaseImageManager.pathToPhotos}$key.jpg"
-        Timber.i(card.image)
+        //card.image = "${FirebaseImageManager.pathToPhotos}$key.jpg"
+        //Timber.i(card.image)
         val cardValues = card.toMap()
         val childAdd = HashMap<String, Any>()
         childAdd["/cards/$key"] = cardValues

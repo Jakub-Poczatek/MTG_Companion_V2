@@ -179,13 +179,11 @@ class CardFragment : Fragment() {
                     //app.cards.create(card.copy())
                     card.email = loggedInViewModel.liveFirebaseUser.value?.email!!
                     cardViewModel.addCard(loggedInViewModel.liveFirebaseUser, card)
-                    if(card.image.isNotEmpty()){
-                        FirebaseImageManager.updateCardArt(
-                            cardListViewModel.liveFirebaseUser.value!!.uid,
-                            card.uid!!,
-                            Uri.parse(card.image)
-                        )
-                    }
+                    FirebaseImageManager.updateCardArt(
+                        cardListViewModel.liveFirebaseUser.value!!.uid,
+                        card,
+                        Uri.parse(card.image)
+                    )
                     defaultAllFields()
                     if(args.quickAdd)
                         findNavController().popBackStack()

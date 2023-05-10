@@ -13,17 +13,15 @@ import org.wit.mtgcompanionv2.utils.customTransformation
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import com.squareup.picasso.Target
+import org.wit.mtgcompanionv2.models.CardModel
 import java.util.Dictionary
 
 object FirebaseImageManager {
     var storage = FirebaseStorage.getInstance().reference
     var userImageUri = MutableLiveData<Uri>()
-    var cardArtUris = MutableLiveData<Dictionary<String, Uri>>()
-    public val pathToPhotos: String = "${storage}photos/xVwdDl1dnEQLqXkrLs8g7vKkxCh2/"
 
     fun checkStorageForExistingProfilePic(userid: String) {
         val imageRef = storage.child("photos").child(userid).child("profilePic.jpg")
-        val defaultImageRef = storage.child("homer.jpg")
 
         imageRef.metadata.addOnSuccessListener { //File Exists
             imageRef.downloadUrl.addOnCompleteListener { task ->
@@ -35,24 +33,9 @@ object FirebaseImageManager {
         }
     }
 
-//    fun checkStorageForExistingCardArt(userid: String, cardId: String): Uri {
-//        val imageRef = storage.child("photos").child(userid).child("${cardId}.jpg")
-//        var tempCardArt = MutableLiveData<Uri>()
-//
-//        imageRef.metadata.addOnSuccessListener {
-//            imageRef.downloadUrl.addOnCompleteListener { task ->
-//                Timber.i("Completed this thing now!!!!!!!!!!!")
-//            }
-//        }.addOnFailureListener{
-//            tempCardArt.value = Uri.EMPTY
-//        }
-//    }
-
-
-    fun uploadImageToFirebase(userid: String, bitmap: Bitmap, updating : Boolean, cardId: String = "profilePic") {
+    fun uploadImageToFirebase(userid: String, bitmap: Bitmap, updating : Boolean) {
         // Get the data from an ImageView as bytes
-        val imageRef = storage.child("photos").child(userid).child("${cardId}.jpg")
-        Timber.i("This is the storage to String: " + storage.path)
+        val imageRef = storage.child("photos").child(userid).child("profilePic.jpg")
         //val bitmap = (imageView as BitmapDrawable).bitmap
         val baos = ByteArrayOutputStream()
         lateinit var uploadTask: UploadTask
@@ -75,6 +58,35 @@ object FirebaseImageManager {
             uploadTask.addOnSuccessListener { ut ->
                 ut.metadata!!.reference!!.downloadUrl.addOnCompleteListener { task ->
                     userImageUri.value = task.result!!
+                }
+            }
+        }
+    }
+
+    fun uploadCardArtToFirebase(userid: String, bitmap: Bitmap, updating : Boolean, card: CardModel) {
+        // Get the data from an ImageView as bytes
+        val imageRef = storage.child("photos").child(userid).child("${card.uid}.jpg")
+        //val bitmap = (imageView as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        lateinit var uploadTask: UploadTask
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+
+        imageRef.metadata.addOnSuccessListener {
+            uploadTask = imageRef.putBytes(data)
+            uploadTask.addOnSuccessListener { ut ->
+                ut.metadata!!.reference!!.downloadUrl.addOnCompleteListener { task ->
+                    card.image = task.result!!.toString()
+                    FirebaseDBManager.update(userid, card.uid!!, card)
+                }
+            }
+        }.addOnFailureListener { //File Doesn't Exist
+            uploadTask = imageRef.putBytes(data)
+            uploadTask.addOnSuccessListener { ut ->
+                ut.metadata!!.reference!!.downloadUrl.addOnCompleteListener { task ->
+                    card.image = task.result!!.toString()
+                    FirebaseDBManager.update(userid, card.uid!!, card)
                 }
             }
         }
@@ -128,7 +140,7 @@ object FirebaseImageManager {
             })
     }
 
-    fun updateCardArt(userid: String, cardId: String, uri: Uri){
+    fun updateCardArt(userid: String, card: CardModel, uri: Uri){
         Picasso.get().load(uri)
             .resize(200, 200)
             .transform(customTransformation())
@@ -139,7 +151,7 @@ object FirebaseImageManager {
                                             from: Picasso.LoadedFrom?
                 ) {
                     Timber.i("MTGComp onBitmapLoaded $bitmap")
-                    uploadImageToFirebase(userid, bitmap!!,false, cardId)
+                    uploadCardArtToFirebase(userid, bitmap!!,false, card)
                 }
 
                 override fun onBitmapFailed(e: java.lang.Exception?,
