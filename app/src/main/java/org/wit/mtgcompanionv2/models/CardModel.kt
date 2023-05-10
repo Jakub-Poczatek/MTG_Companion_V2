@@ -23,7 +23,7 @@ data class CardModel(
     var colours: MutableList<Colour> = ArrayList<Colour>(),
     var set: String = "N/A",
     var value: Double = -1.0,
-    var image: Uri = Uri.EMPTY,
+    var image: String = "N/A",
     var email: String? = "joe@mail.com"
 ): Parcelable{
     @Exclude
@@ -45,7 +45,7 @@ data class CardModel(
             "colours" to colours,
             "set" to set,
             "value" to value,
-            "image" to image.toString(),
+            "image" to image,
             "email" to email
         )
     }

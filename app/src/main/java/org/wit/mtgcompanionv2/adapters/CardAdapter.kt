@@ -1,5 +1,6 @@
 package org.wit.mtgcompanionv2.adapters
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -46,7 +47,7 @@ class CardAdapter constructor(private var cards: List<CardModel>, private val li
 
         fun bind(card: CardModel, listener: CardListener) {
             binding.card = card
-            Picasso.get().load(card.image).into(binding.cardCardArtImgView)
+            Picasso.get().load(Uri.parse(card.image)).into(binding.cardCardArtImgView)
             binding.root.setOnClickListener {
                 listener.onCardClick(card, adapterPosition)
             }

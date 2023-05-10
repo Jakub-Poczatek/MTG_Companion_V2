@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
 import androidx.core.os.bundleOf
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -22,22 +25,19 @@ import org.wit.mtgcompanionv2.main.MTGCompanion
 import org.wit.mtgcompanionv2.models.CardModel
 import org.wit.mtgcompanionv2.ui.auth.LoggedInViewModel
 import org.wit.mtgcompanionv2.utils.createLoader
+import org.wit.mtgcompanionv2.utils.hideLoader
 import org.wit.mtgcompanionv2.utils.showLoader
 
 class CardListFragment : Fragment(), CardListener {
 
-    lateinit var app: MTGCompanion
     private var _fragBinding: FragmentCardListBinding? = null
     private val fragBinding get() = _fragBinding!!
-    private lateinit var navController: NavController
     lateinit var loader : AlertDialog
     private val cardListViewModel: CardListViewModel by activityViewModels()
     private val loggedInViewModel: LoggedInViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        app = activity?.application as MTGCompanion
-        navController = findNavController()
         setHasOptionsMenu(false)
     }
 
@@ -46,24 +46,32 @@ class CardListFragment : Fragment(), CardListener {
             savedInstanceState: Bundle?): View? {
         _fragBinding = FragmentCardListBinding.inflate(inflater, container, false)
         val root = fragBinding.root
+        setupMenu()
         loader = createLoader(requireActivity())
         activity?.title = getString(R.string.cardListTitle)
 
         val layoutManager = GridLayoutManager(requireContext(), 2)
         fragBinding.cardListRecycleView.layoutManager = layoutManager
+
+        fragBinding.menuFloatingAddButton.setOnClickListener {
+            val action = CardListFragmentDirections.actionCardListFragmentToCardFragment(false, null, true)
+            findNavController().navigate(action)
+        }
+
+        showLoader(loader, "Downloading Cards")
         cardListViewModel.observableCardList.observe(viewLifecycleOwner, Observer {
             cards ->
-            cards.let {render(cards)}
+            cards?.let {
+                render(cards as ArrayList<CardModel>)
+                hideLoader(loader)
+            }
         })
-        fragBinding.cardListRecycleView.adapter = CardAdapter(cardListViewModel.observableCardList.value!!, this)
+        //fragBinding.cardListRecycleView.adapter = CardAdapter(cardListViewModel.observableCardList.value!!, this)
 
 
         textChangeListener()
 
-        fragBinding.menuFloatingAddButton.setOnClickListener {
-            val action = CardListFragmentDirections.actionCardListFragmentToCardFragment(false, null, true)
-            navController.navigate(action)
-        }
+
         return root
     }
 
@@ -94,15 +102,28 @@ class CardListFragment : Fragment(), CardListener {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _fragBinding = null
-    }
-
     override fun onCardClick(card: CardModel, position: Int) {
         fragBinding.cardListSearchTxt.text.clear()
         val action = CardListFragmentDirections.actionCardListFragmentToCardFragment(true, card, false)
-        navController.navigate(action)
+        findNavController().navigate(action)
+    }
+
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+            override fun onPrepareMenu(menu: Menu) {
+                // Handle for example visibility of menu items
+            }
+
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_card_list, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                // Validate and handle the selected menu item
+                return NavigationUI.onNavDestinationSelected(menuItem,
+                    requireView().findNavController())
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onResume() {
@@ -114,14 +135,6 @@ class CardListFragment : Fragment(), CardListener {
                 cardListViewModel.load()
             }
         })
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-                CardListFragment().apply {
-                    arguments = Bundle().apply{}
-                }
     }
 
     private fun textChangeListener(){
@@ -146,5 +159,10 @@ class CardListFragment : Fragment(), CardListener {
                 fragBinding.cardListRecycleView.adapter = CardAdapter(cardListViewModel.observableCardList.value!!, this)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _fragBinding = null
     }
 }

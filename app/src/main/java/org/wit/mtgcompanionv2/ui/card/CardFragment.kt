@@ -1,6 +1,7 @@
 package org.wit.mtgcompanionv2.ui.card
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.NumberPicker
@@ -158,7 +159,7 @@ class CardFragment : Fragment() {
                 fragBinding.cardRaritySpinner.setSelection(index)
         }
         fragBinding.card = card
-        Picasso.get().load(card.image).into(fragBinding.cardArtImgVw)
+        Picasso.get().load(Uri.parse(card.image)).into(fragBinding.cardArtImgVw)
     }
 
     private fun setAddButtonListener(layout: FragmentCardBinding) {
@@ -239,9 +240,9 @@ class CardFragment : Fragment() {
                         i("Got Result ${result.data!!.data}")
                         val image = result.data!!.data!!
                         requireContext().contentResolver.takePersistableUriPermission(image, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                        card.image = image
+                        card.image = image.toString()
                         fetchingImage = true
-                        Picasso.get().load(card.image).into(fragBinding.cardArtImgVw)
+                        Picasso.get().load(Uri.parse(card.image)).into(fragBinding.cardArtImgVw)
                     }
                 }
                 AppCompatActivity.RESULT_CANCELED -> {} else -> {}
