@@ -62,7 +62,7 @@ object FirebaseDBManager: CardStore {
     override fun delete(userid: String, cardId: String) {
         val childDelete: MutableMap<String, Any?> = HashMap()
         childDelete["/cards/$cardId"] = null
-        childDelete["/users-cards/$userid/$cardId"] = null
+        childDelete["/user-cards/$userid/$cardId"] = null
         database.updateChildren(childDelete)
     }
 

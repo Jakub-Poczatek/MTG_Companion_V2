@@ -17,6 +17,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.adapters.CardAdapter
 import org.wit.mtgcompanionv2.adapters.CardListener
@@ -24,6 +27,7 @@ import org.wit.mtgcompanionv2.databinding.FragmentCardListBinding
 import org.wit.mtgcompanionv2.main.MTGCompanion
 import org.wit.mtgcompanionv2.models.CardModel
 import org.wit.mtgcompanionv2.ui.auth.LoggedInViewModel
+import org.wit.mtgcompanionv2.utils.SwipeToDeleteCallback
 import org.wit.mtgcompanionv2.utils.createLoader
 import org.wit.mtgcompanionv2.utils.hideLoader
 import org.wit.mtgcompanionv2.utils.showLoader
@@ -69,11 +73,20 @@ class CardListFragment : Fragment(), CardListener {
                 checkSwipeRefresh()
             }
         })
-        //fragBinding.cardListRecycleView.adapter = CardAdapter(cardListViewModel.observableCardList.value!!, this)
-
 
         textChangeListener()
 
+        val swipeDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                showLoader(loader, "Deleting Card")
+                val adapter = fragBinding.cardListRecycleView.adapter as CardAdapter
+                adapter.removeAt(viewHolder.adapterPosition)
+                cardListViewModel.delete(cardListViewModel.liveFirebaseUser.value?.uid!!, (viewHolder.itemView.tag as CardModel).uid!!)
+                hideLoader(loader)
+            }
+        }
+        val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
+        itemTouchDeleteHelper.attachToRecyclerView(fragBinding.cardListRecycleView)
 
         return root
     }
@@ -105,7 +118,7 @@ class CardListFragment : Fragment(), CardListener {
             fragBinding.swipeRefresh.isRefreshing = false
     }
 
-    private fun render(cardsList: List<CardModel>) {
+    private fun render(cardsList: ArrayList<CardModel>) {
         fragBinding.cardListRecycleView.adapter = CardAdapter(cardsList, this)
         if (cardsList.isEmpty()) {
             fragBinding.cardListRecycleView.visibility = View.GONE
@@ -160,7 +173,7 @@ class CardListFragment : Fragment(), CardListener {
             val query = fragBinding.cardListSearchTxt.text.toString().lowercase().trim()
             val filteredCards = ArrayList<CardModel>()
             if(query.isEmpty()) {
-                fragBinding.cardListRecycleView.adapter = CardAdapter(cardListViewModel.observableCardList.value!!, this)
+                fragBinding.cardListRecycleView.adapter = CardAdapter(ArrayList<CardModel>(cardListViewModel.observableCardList.value!!), this)
             } else if(fragBinding.cardListSearchBySpinner.selectedItem.toString() == "name") {
                 for (card in cardListViewModel.observableCardList.value!!) {
                     if (query in card.name.lowercase().trim())
@@ -174,7 +187,7 @@ class CardListFragment : Fragment(), CardListener {
                 }
                 fragBinding.cardListRecycleView.adapter = CardAdapter(filteredCards, this)
             } else {
-                fragBinding.cardListRecycleView.adapter = CardAdapter(cardListViewModel.observableCardList.value!!, this)
+                fragBinding.cardListRecycleView.adapter = CardAdapter(ArrayList<CardModel>(cardListViewModel.observableCardList.value!!), this)
             }
         }
     }
