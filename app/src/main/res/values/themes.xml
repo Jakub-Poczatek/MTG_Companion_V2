@@ -51,6 +51,11 @@
         <item name="android:layout_marginBottom">@dimen/icon_bottom_margin</item>
     </style>
 
+    <style name="toggleStyle">
+        <item name="colorControlActivated">@color/colorWhite</item>
+        <item name="colorControlHighlight">@color/black</item>
+    </style>
+
     <style name="Theme.MTGCompanionV2.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.MTGCompanionV2.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

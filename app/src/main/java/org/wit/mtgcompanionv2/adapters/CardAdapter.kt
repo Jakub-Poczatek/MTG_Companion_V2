@@ -13,13 +13,16 @@ interface CardListener {
     fun onCardClick(card: CardModel)
 }
 
-class CardAdapter constructor(private var cards: ArrayList<CardModel>, private val listener: CardListener)
+class CardAdapter constructor(
+    private var cards: ArrayList<CardModel>,
+    private val listener: CardListener,
+    private val readOnly: Boolean)
     : RecyclerView.Adapter<CardAdapter.MainHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         val binding = CardCardBinding
             .inflate(LayoutInflater.from(parent.context), parent, false)
-        return MainHolder(binding)
+        return MainHolder(binding, readOnly)
     }
 
     override fun onBindViewHolder(holder: MainHolder, position: Int) {
@@ -29,21 +32,10 @@ class CardAdapter constructor(private var cards: ArrayList<CardModel>, private v
 
     override fun getItemCount(): Int = cards.size
 
-    inner class MainHolder(private val binding : CardCardBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MainHolder(private val binding : CardCardBinding, private val readOnly: Boolean)
+            : RecyclerView.ViewHolder(binding.root) {
 
-        /*fun bind(card: CardModel, listener: CardListener) {
-            binding.cardCardNameTxt.text = card.name
-            binding.cardCardTypeTxt.text = card.type
-            val powerToughnessString = "${card.power}/${card.toughness}"
-            binding.cardCardPowerToughnessTxt.text = powerToughnessString
-            val costString = "${card.neutral}/${card.white}/${card.black}/${card.red}/${card.blue}/${card.green}"
-            binding.cardCardCostTxt.text = costString
-            binding.cardCardDescriptionTxt.text = card.description
-            Picasso.get().load(card.image).into(binding.cardCardArtImgView)
-            binding.root.setOnClickListener {
-                listener.onCardClick(card, adapterPosition)
-            }
-        }*/
+        val readOnlyRow = readOnly
 
         fun bind(card: CardModel, listener: CardListener) {
             binding.root.tag = card

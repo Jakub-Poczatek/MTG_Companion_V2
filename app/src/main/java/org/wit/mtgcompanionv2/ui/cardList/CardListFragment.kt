@@ -1,10 +1,9 @@
 package org.wit.mtgcompanionv2.ui.cardList
 
 import android.app.AlertDialog
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
-import androidx.core.os.bundleOf
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.widget.addTextChangedListener
@@ -12,19 +11,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.adapters.CardAdapter
 import org.wit.mtgcompanionv2.adapters.CardListener
 import org.wit.mtgcompanionv2.databinding.FragmentCardListBinding
-import org.wit.mtgcompanionv2.main.MTGCompanion
 import org.wit.mtgcompanionv2.models.CardModel
 import org.wit.mtgcompanionv2.ui.auth.LoggedInViewModel
 import org.wit.mtgcompanionv2.utils.*
@@ -115,7 +111,8 @@ class CardListFragment : Fragment(), CardListener {
         fragBinding.swipeRefresh.setOnRefreshListener {
             fragBinding.swipeRefresh.isRefreshing = true
             showLoader(loader,"Downloading Donations")
-            cardListViewModel.load()
+            if (cardListViewModel.readOnly.value!!) cardListViewModel.loadAll()
+            else cardListViewModel.load()
         }
     }
 
@@ -125,7 +122,7 @@ class CardListFragment : Fragment(), CardListener {
     }
 
     private fun render(cardsList: ArrayList<CardModel>) {
-        fragBinding.cardListRecycleView.adapter = CardAdapter(cardsList, this)
+        fragBinding.cardListRecycleView.adapter = CardAdapter(cardsList, this, cardListViewModel.readOnly.value!!)
         if (cardsList.isEmpty()) {
             fragBinding.cardListRecycleView.visibility = View.GONE
             fragBinding.cardsNotFound.visibility = View.VISIBLE
@@ -142,7 +139,8 @@ class CardListFragment : Fragment(), CardListener {
     override fun onCardClick(card: CardModel) {
         fragBinding.cardListSearchTxt.text.clear()
         val action = CardListFragmentDirections.actionCardListFragmentToCardFragment(true, card, false)
-        findNavController().navigate(action)
+        if(!cardListViewModel.readOnly.value!!)
+            findNavController().navigate(action)
     }
 
     private fun setupMenu() {
@@ -153,6 +151,16 @@ class CardListFragment : Fragment(), CardListener {
 
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_card_list, menu)
+
+                val item = menu.findItem(R.id.toggleCards) as MenuItem
+                item.setActionView(R.layout.togglebutton_layout)
+                val toggleCards: SwitchCompat = item.actionView!!.findViewById(R.id.toggleButton)
+                toggleCards.isChecked = false
+
+                toggleCards.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) cardListViewModel.loadAll()
+                    else cardListViewModel.load()
+                }
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -179,21 +187,23 @@ class CardListFragment : Fragment(), CardListener {
             val query = fragBinding.cardListSearchTxt.text.toString().lowercase().trim()
             val filteredCards = ArrayList<CardModel>()
             if(query.isEmpty()) {
-                fragBinding.cardListRecycleView.adapter = CardAdapter(ArrayList<CardModel>(cardListViewModel.observableCardList.value!!), this)
+                fragBinding.cardListRecycleView.adapter = CardAdapter(
+                    ArrayList<CardModel>(cardListViewModel.observableCardList.value!!), this, cardListViewModel.readOnly.value!!)
             } else if(fragBinding.cardListSearchBySpinner.selectedItem.toString() == "name") {
                 for (card in cardListViewModel.observableCardList.value!!) {
                     if (query in card.name.lowercase().trim())
                         filteredCards.add(card)
                 }
-                fragBinding.cardListRecycleView.adapter = CardAdapter(filteredCards, this)
+                fragBinding.cardListRecycleView.adapter = CardAdapter(filteredCards, this, cardListViewModel.readOnly.value!!)
             } else if (fragBinding.cardListSearchBySpinner.selectedItem.toString() == "type") {
                 for (card in cardListViewModel.observableCardList.value!!) {
                     if (query in card.type.lowercase().trim())
                         filteredCards.add(card)
                 }
-                fragBinding.cardListRecycleView.adapter = CardAdapter(filteredCards, this)
+                fragBinding.cardListRecycleView.adapter = CardAdapter(filteredCards, this, cardListViewModel.readOnly.value!!)
             } else {
-                fragBinding.cardListRecycleView.adapter = CardAdapter(ArrayList<CardModel>(cardListViewModel.observableCardList.value!!), this)
+                fragBinding.cardListRecycleView.adapter = CardAdapter(
+                    ArrayList<CardModel>(cardListViewModel.observableCardList.value!!), this, cardListViewModel.readOnly.value!!)
             }
         }
     }

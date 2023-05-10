@@ -13,7 +13,25 @@ object FirebaseDBManager: CardStore {
     var database: DatabaseReference = FirebaseDatabase.getInstance().reference
 
     override fun findAll(cardsList: MutableLiveData<List<CardModel>>) {
-        TODO("Not yet implemented")
+        database.child("cards")
+            .addValueEventListener(object: ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Timber.i("Firebase")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val localList = ArrayList<CardModel>()
+                    val children = snapshot.children
+                    children.forEach{
+                        val card = it.getValue(CardModel::class.java)
+                        localList.add(card!!)
+                    }
+                    database.child("cards")
+                        .removeEventListener(this)
+
+                    cardsList.value = localList
+                }
+            })
     }
 
     override fun findAll(userid: String, cardsList: MutableLiveData<List<CardModel>>) {

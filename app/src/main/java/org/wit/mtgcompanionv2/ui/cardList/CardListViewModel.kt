@@ -12,11 +12,12 @@ import java.lang.Exception
 
 class CardListViewModel : ViewModel() {
     private val cardsList = MutableLiveData<List<CardModel>>()
+    var liveFirebaseUser = MutableLiveData<FirebaseUser>()
+    var readOnly = MutableLiveData(false)
 
     val observableCardList: LiveData<List<CardModel>>
         get() = cardsList
 
-    var liveFirebaseUser = MutableLiveData<FirebaseUser>()
 
     init {
         load()
@@ -24,6 +25,7 @@ class CardListViewModel : ViewModel() {
 
     fun load() {
         try {
+            readOnly.value = false
             FirebaseDBManager.findAll(liveFirebaseUser.value?.uid!!, cardsList)
             Timber.i("Cards List Load Success : ${cardsList.value.toString()}")
         }
@@ -38,6 +40,16 @@ class CardListViewModel : ViewModel() {
             Timber.i("Card Delete Success")
         } catch (e: Exception) {
             Timber.i("Card Delete Error: ${e.message}")
+        }
+    }
+
+    fun loadAll(){
+        try {
+            readOnly.value = true
+            FirebaseDBManager.findAll(cardsList)
+            Timber.i("Card List LoadAll Success: ${cardsList.value.toString()}")
+        } catch (e: Exception) {
+            Timber.i("Card List LoadAll Error: ${e.message}")
         }
     }
 }
