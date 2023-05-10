@@ -93,7 +93,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/cardCardCostTxt"
                 app:layout_constraintStart_toStartOf="@id/cardCardNameTxt"
                 app:layout_constraintTop_toBottomOf="@id/cardCardTypeTxt"
-                tools:text="@{Short.toString(card.power) + `/` + Short.toString(card.toughness)}" />
+                tools:text="@{Integer.toString(card.power) + `/` + Integer.toString(card.toughness)}" />
 
             <TextView
                 android:id="@+id/cardCardCostTxt"
@@ -106,7 +106,7 @@
                 app:layout_constraintEnd_toEndOf="@id/cardCardNameTxt"
                 app:layout_constraintStart_toEndOf="@+id/cardCardPowerToughnessTxt"
                 app:layout_constraintTop_toTopOf="@id/cardCardPowerToughnessTxt"
-                tools:text="@{Short.toString(card.neutral) + `/` + Short.toString(card.white) + `/` + Short.toString(card.black) + `/` + Short.toString(card.red) + `/` + Short.toString(card.blue) + `/` + Short.toString(card.green)}" />
+                tools:text="@{Integer.toString(card.neutral) + `/` + Integer.toString(card.white) + `/` + Integer.toString(card.black) + `/` + Integer.toString(card.red) + `/` + Integer.toString(card.blue) + `/` + Integer.toString(card.green)}" />
 
             <TextView
                 android:id="@+id/cardCardDescriptionTxt"

@@ -3,7 +3,8 @@ package org.wit.mtgcompanionv2.ui.card
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.wit.mtgcompanionv2.models.CardManager
+import com.google.firebase.auth.FirebaseUser
+import org.wit.mtgcompanionv2.firebase.FirebaseDBManager
 import org.wit.mtgcompanionv2.models.CardModel
 
 class CardViewModel : ViewModel() {
@@ -12,9 +13,9 @@ class CardViewModel : ViewModel() {
     val observableStatus: LiveData<Boolean>
         get() = status
 
-    fun addCard(card: CardModel){
+    fun addCard(firebaseUser: MutableLiveData<FirebaseUser>, card: CardModel){
         status.value = try {
-            CardManager.create(card.copy())
+            FirebaseDBManager.create(firebaseUser, card)
             true
         } catch (e: IllegalArgumentException) {
             false
@@ -23,7 +24,7 @@ class CardViewModel : ViewModel() {
 
     fun updateCard(card: CardModel){
         status.value = try {
-            CardManager.update(card)
+            //CardManager.update(card)
             true
         } catch (e: IllegalArgumentException) {
             false
@@ -32,7 +33,7 @@ class CardViewModel : ViewModel() {
 
     fun deleteCard(card: CardModel){
         status.value = try {
-            CardManager.delete(card)
+            //CardManager.delete(card)
             true
         } catch (e: IllegalArgumentException) {
             false

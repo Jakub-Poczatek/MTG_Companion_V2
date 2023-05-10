@@ -1,3 +1,4 @@
+/*
 package org.wit.mtgcompanionv2.models
 
 import androidx.core.net.toUri
@@ -25,7 +26,7 @@ object CardManager: CardStore{
                 .addOnSuccessListener { result ->
                     for (document in result) {
                         val card = CardModel(
-                            id = document.id,
+                            uid = document.id,
                             name = document.getString("name")!!,
                             type = document.getString("type")!!,
                             power = document.get("power").toString().toShort(),
@@ -73,8 +74,8 @@ object CardManager: CardStore{
 
         db.collection(user).add(cardHash)
             .addOnSuccessListener { documentRef ->
-                foundCard = cards.find { c -> c.id == card.id }
-                foundCard?.id = documentRef.id
+                foundCard = cards.find { c -> c.uid == card.uid }
+                foundCard?.uid = documentRef.id
 
                 db.collection("AllCards").document(documentRef.id).set(cardHash)
             }
@@ -87,14 +88,14 @@ object CardManager: CardStore{
 
     override fun update(card: CardModel) {
         //val user = auth.currentUser?.email.toString()
-        db.collection(user).document(card.id).set(cardToHash(card))
+        db.collection(user).document(card.uid).set(cardToHash(card))
             .addOnSuccessListener {
                 i("Card successfully updated: $card")
             }
             .addOnFailureListener{ error ->
                 e("Error updating card: $error")
             }
-        val foundCard: CardModel? = cards.find { c -> c.id == card.id }
+        val foundCard: CardModel? = cards.find { c -> c.uid == card.uid }
         if(foundCard != null){
             foundCard.name = card.name
             foundCard.type = card.type
@@ -117,7 +118,7 @@ object CardManager: CardStore{
 
     override fun delete(card: CardModel) {
         //val user = auth.currentUser?.email.toString()
-        db.collection(user).document(card.id).delete()
+        db.collection(user).document(card.uid).delete()
             .addOnSuccessListener {
                 i("Card successfully deleted!")
             }
@@ -155,4 +156,4 @@ object CardManager: CardStore{
         }
         return convertedColours
     }
-}
+}*/
