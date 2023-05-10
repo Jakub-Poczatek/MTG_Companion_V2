@@ -15,11 +15,13 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.auth.FirebaseUser
+import com.squareup.picasso.Picasso
 import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.databinding.HomeBinding
 import org.wit.mtgcompanionv2.databinding.NavHeaderBinding
 import org.wit.mtgcompanionv2.ui.auth.LoggedInViewModel
 import org.wit.mtgcompanionv2.ui.auth.Login
+import org.wit.mtgcompanionv2.utils.customTransformation
 
 class Home : AppCompatActivity() {
 
@@ -68,6 +70,14 @@ class Home : AppCompatActivity() {
         var headerView = binding.navView.getHeaderView(0)
         navHeaderBinding = NavHeaderBinding.bind(headerView)
         navHeaderBinding.navHeaderEmail.text = currentUser.email
+        if(currentUser.photoUrl != null && currentUser.displayName != null) {
+            navHeaderBinding.navHeaderName.text = currentUser.displayName
+            Picasso.get().load(currentUser.photoUrl)
+                .resize(200, 200)
+                .transform(customTransformation())
+                .centerCrop()
+                .into(navHeaderBinding.navHeaderImage)
+        }
     }
 
     fun signOut(item: MenuItem) {

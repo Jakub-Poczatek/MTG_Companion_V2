@@ -1,8 +1,11 @@
 package org.wit.mtgcompanionv2.utils
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+import com.makeramen.roundedimageview.RoundedTransformationBuilder
+import com.squareup.picasso.Transformation
 import org.wit.mtgcompanionv2.R
 
 fun createLoader(activity: FragmentActivity) : AlertDialog {
@@ -42,3 +45,11 @@ fun serviceAvailableMessage(activity: FragmentActivity) {
         Toast.LENGTH_LONG
     )
 }
+
+fun customTransformation() : Transformation =
+    RoundedTransformationBuilder()
+        .borderColor(Color.WHITE)
+        .borderWidthDp(2F)
+        .cornerRadiusDp(35F)
+        .oval(false)
+        .build()
