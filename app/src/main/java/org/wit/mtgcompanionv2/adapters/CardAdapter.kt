@@ -1,5 +1,6 @@
 package org.wit.mtgcompanionv2.adapters
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,10 +10,10 @@ import org.wit.mtgcompanionv2.databinding.CardCardBinding
 import org.wit.mtgcompanionv2.models.CardModel
 
 interface CardListener {
-    fun onCardClick(card: CardModel, position: Int)
+    fun onCardClick(card: CardModel)
 }
 
-class CardAdapter constructor(private var cards: List<CardModel>, private val listener: CardListener)
+class CardAdapter constructor(private var cards: ArrayList<CardModel>, private val listener: CardListener)
     : RecyclerView.Adapter<CardAdapter.MainHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
@@ -45,11 +46,15 @@ class CardAdapter constructor(private var cards: List<CardModel>, private val li
         }*/
 
         fun bind(card: CardModel, listener: CardListener) {
+            binding.root.tag = card
             binding.card = card
-            Picasso.get().load(card.image).into(binding.cardCardArtImgView)
-            binding.root.setOnClickListener {
-                listener.onCardClick(card, adapterPosition)
-            }
+            Picasso.get().load(Uri.parse(card.image)).into(binding.cardCardArtImgView)
+            binding.root.setOnClickListener { listener.onCardClick(card) }
         }
+    }
+
+    fun removeAt(position: Int){
+        cards.removeAt(position)
+        notifyItemRemoved(position)
     }
 }

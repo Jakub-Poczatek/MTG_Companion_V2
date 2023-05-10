@@ -1,6 +1,7 @@
 package org.wit.mtgcompanionv2.ui.card
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.NumberPicker
@@ -18,38 +19,33 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseUser
 import com.squareup.picasso.Picasso
 import org.wit.mtgcompanion.helpers.showImagePicker
 import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.databinding.FragmentCardBinding
+import org.wit.mtgcompanionv2.firebase.FirebaseDBManager
 import org.wit.mtgcompanionv2.main.MTGCompanion
 import org.wit.mtgcompanionv2.models.CardModel
 import org.wit.mtgcompanionv2.models.Colour
 import org.wit.mtgcompanionv2.models.Rarity
 import org.wit.mtgcompanionv2.ui.auth.LoggedInViewModel
 import org.wit.mtgcompanionv2.ui.cardList.CardListViewModel
+import timber.log.Timber
 import timber.log.Timber.i
 
 
 class CardFragment : Fragment() {
 
-    lateinit var app: MTGCompanion
     private var _fragBinding: FragmentCardBinding? = null
     private val fragBinding get() = _fragBinding!!
     private lateinit var cardViewModel: CardViewModel
     private var card = CardModel()
     private lateinit var imageIntentLauncher: ActivityResultLauncher<Intent>
-    private lateinit var navController: NavController
     private val args by navArgs<CardFragmentArgs>()
     private var fetchingImage: Boolean = false
     private val cardListViewModel: CardListViewModel by activityViewModels()
     private val loggedInViewModel: LoggedInViewModel by activityViewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        app = activity?.application as MTGCompanion
-        navController = findNavController()
-    }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -57,10 +53,9 @@ class CardFragment : Fragment() {
         _fragBinding = FragmentCardBinding.inflate(inflater, container, false)
         val root = fragBinding.root
         activity?.title = getString(R.string.cardActivityTitle)
-        cardViewModel = ViewModelProvider(this)[CardViewModel::class.java]
-        cardViewModel.observableStatus.observe(viewLifecycleOwner, Observer {
-            status -> status?.let { render(status) }
-        })
+
+        cardViewModel = ViewModelProvider(this).get(CardViewModel::class.java)
+        cardViewModel.observableStatus.observe(viewLifecycleOwner, Observer { render() })
 
         setAddButtonListener(fragBinding)
 
@@ -79,16 +74,8 @@ class CardFragment : Fragment() {
         return root
     }
 
-    private fun render(status: Boolean) {
-        when (status) {
-            true -> {
-                view?.let {
-                    //Uncomment this if you want to immediately return to Report
-                    //findNavController().popBackStack()
-                }
-            }
-            false -> Toast.makeText(context, getString(R.string.cardError), Toast.LENGTH_LONG).show()
-        }
+    private fun render() {
+        Timber.i("This is the render function, dunno what it does")
     }
 
     @Deprecated("Deprecated in Java")
@@ -102,8 +89,8 @@ class CardFragment : Fragment() {
         when (item.itemId){
             R.id.menuItemDeleteCard -> {
                 //app.cards.delete(card)
-                cardViewModel.deleteCard(card)
-                navController.popBackStack()
+                cardListViewModel.delete(cardListViewModel.liveFirebaseUser.value?.uid!!, card.uid!!)
+                findNavController().popBackStack()
             }
         }
         return NavigationUI.onNavDestinationSelected(item, requireView().findNavController())
@@ -158,21 +145,21 @@ class CardFragment : Fragment() {
                 fragBinding.cardRaritySpinner.setSelection(index)
         }
         fragBinding.card = card
-        Picasso.get().load(card.image).into(fragBinding.cardArtImgVw)
+        Picasso.get().load(Uri.parse(card.image)).into(fragBinding.cardArtImgVw)
     }
 
     private fun setAddButtonListener(layout: FragmentCardBinding) {
         layout.addCardBtn.setOnClickListener {
             card.name = layout.cardNameTxt.text.toString()
             card.type = layout.cardTypeSpinner.selectedItem.toString()
-            card.power = layout.cardFragmentPowerSeeker.progress.toShort()
-            card.toughness = layout.cardFragmentToughnessSeeker.progress.toShort()
-            card.neutral = layout.cardFragmentNtrlPicker.value.toShort()
-            card.white = layout.cardFragmentWhtPicker.value.toShort()
-            card.black = layout.cardFragmentBlkPicker.value.toShort()
-            card.red = layout.cardFragmentRedPicker.value.toShort()
-            card.blue = layout.cardFragmentBluPicker.value.toShort()
-            card.green = layout.cardFragmentGrnPicker.value.toShort()
+            card.power = layout.cardFragmentPowerSeeker.progress.toInt()
+            card.toughness = layout.cardFragmentToughnessSeeker.progress.toInt()
+            card.neutral = layout.cardFragmentNtrlPicker.value.toInt()
+            card.white = layout.cardFragmentWhtPicker.value.toInt()
+            card.black = layout.cardFragmentBlkPicker.value.toInt()
+            card.red = layout.cardFragmentRedPicker.value.toInt()
+            card.blue = layout.cardFragmentBluPicker.value.toInt()
+            card.green = layout.cardFragmentGrnPicker.value.toInt()
             card.description = layout.cardDescriptionMLTxt.text.toString()
             card.rarity = Rarity.valueOf(layout.cardRaritySpinner.selectedItem.toString())
             card.set = layout.cardFragmentSetEdit.text.toString()
@@ -185,14 +172,15 @@ class CardFragment : Fragment() {
             if(card.name.isNotEmpty()) {
                 if(args.edit) {
                     //app.cards.update(card.copy())
-                    cardViewModel.updateCard(card)
-                    navController.popBackStack()
+                    cardViewModel.updateCard(loggedInViewModel.liveFirebaseUser.value?.uid!!, card.uid!!, card)
+                    findNavController().popBackStack()
                 } else {
                     //app.cards.create(card.copy())
-                    cardViewModel.addCard(card)
+                    card.email = loggedInViewModel.liveFirebaseUser.value?.email!!
+                    cardViewModel.addCard(loggedInViewModel.liveFirebaseUser, card)
                     defaultAllFields()
                     if(args.quickAdd)
-                        navController.popBackStack()
+                        findNavController().popBackStack()
                 }
             } else {
                 Snackbar.make(it, R.string.InvalidCardName, Snackbar.LENGTH_LONG).show()
@@ -238,9 +226,9 @@ class CardFragment : Fragment() {
                         i("Got Result ${result.data!!.data}")
                         val image = result.data!!.data!!
                         requireContext().contentResolver.takePersistableUriPermission(image, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                        card.image = image
+                        card.image = image.toString()
                         fetchingImage = true
-                        Picasso.get().load(card.image).into(fragBinding.cardArtImgVw)
+                        Picasso.get().load(Uri.parse(card.image)).into(fragBinding.cardArtImgVw)
                     }
                 }
                 AppCompatActivity.RESULT_CANCELED -> {} else -> {}
