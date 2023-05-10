@@ -39,7 +39,12 @@ object FirebaseDBManager: CardStore {
     }
 
     override fun findById(userId: String, cardId: String, card: MutableLiveData<CardModel>) {
-        TODO("Not yet implemented")
+        database.child("user-cards").child(userId).child(cardId).get().addOnSuccessListener {
+            card.value = it.getValue(CardModel::class.java)
+            Timber.i("Firebase got value: ${it.value}")
+        }.addOnFailureListener{
+            Timber.e("Firebase error getting data: $it")
+        }
     }
 
     override fun create(firebaseUser: MutableLiveData<FirebaseUser>, card: CardModel) {
@@ -67,6 +72,10 @@ object FirebaseDBManager: CardStore {
     }
 
     override fun update(userid: String, cardId: String, card: CardModel) {
-        TODO("Not yet implemented")
+        val cardValues = card.toMap()
+        val childUpdate: MutableMap<String, Any?> = HashMap()
+        childUpdate["/cards/$cardId"] = cardValues
+        childUpdate["/user-cards/$userid/$cardId"] = cardValues
+        database.updateChildren(childUpdate)
     }
 }
