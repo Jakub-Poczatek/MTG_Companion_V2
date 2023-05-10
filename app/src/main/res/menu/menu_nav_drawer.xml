@@ -17,5 +17,14 @@
             android:id="@+id/mapFragment"
             android:icon="@drawable/ic_menu_map"
             android:title="@string/navDrawerItemMap" />
+        <item android:title="Access Control">
+            <menu>
+                <item
+                    android:id="@+id/loginFragment"
+                    android:icon="@android:drawable/ic_menu_revert"
+                    android:onClick="signOut"
+                    android:title="@string/sign_out" />
+            </menu>
+        </item>
     </group>
 </menu>

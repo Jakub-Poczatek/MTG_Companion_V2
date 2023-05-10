@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -25,6 +26,8 @@ import org.wit.mtgcompanionv2.main.MTGCompanion
 import org.wit.mtgcompanionv2.models.CardModel
 import org.wit.mtgcompanionv2.models.Colour
 import org.wit.mtgcompanionv2.models.Rarity
+import org.wit.mtgcompanionv2.ui.auth.LoggedInViewModel
+import org.wit.mtgcompanionv2.ui.cardList.CardListViewModel
 import timber.log.Timber.i
 
 
@@ -39,6 +42,8 @@ class CardFragment : Fragment() {
     private lateinit var navController: NavController
     private val args by navArgs<CardFragmentArgs>()
     private var fetchingImage: Boolean = false
+    private val cardListViewModel: CardListViewModel by activityViewModels()
+    private val loggedInViewModel: LoggedInViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,11 +91,13 @@ class CardFragment : Fragment() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_card, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.menuItemDeleteCard -> {
