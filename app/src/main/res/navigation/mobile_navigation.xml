@@ -32,6 +32,9 @@
             android:name="quickAdd"
             app:argType="boolean"
             android:defaultValue="false" />
+        <action
+            android:id="@+id/action_cardFragment_to_login2"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/cardListFragment"
@@ -47,6 +50,9 @@
             app:destination="@id/mapFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
+        <action
+            android:id="@+id/action_cardListFragment_to_login2"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -63,5 +69,12 @@
             app:destination="@id/cardFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
+        <action
+            android:id="@+id/action_mapFragment_to_login2"
+            app:destination="@id/loginFragment" />
     </fragment>
+    <activity
+        android:id="@+id/loginFragment"
+        android:name="org.wit.mtgcompanionv2.ui.auth.Login"
+        android:label="Login" />
 </navigation>

@@ -28,7 +28,7 @@ class FirebaseAuthManager(application: Application) {
 
     fun login(email: String?, password: String?) {
         firebaseAuth!!.signInWithEmailAndPassword(email!!, password!!)
-            .addOnCompleteListener(application!!.mainExecutor, { task ->
+            .addOnCompleteListener(application!!.mainExecutor) { task ->
                 if (task.isSuccessful) {
                     liveFirebaseUser.postValue(firebaseAuth!!.currentUser)
                     errorStatus.postValue(false)
@@ -36,12 +36,12 @@ class FirebaseAuthManager(application: Application) {
                     Timber.i("Login Failure: ${task.exception!!.message}")
                     errorStatus.postValue(true)
                 }
-            })
+            }
     }
 
     fun register(email: String?, password: String?) {
         firebaseAuth!!.createUserWithEmailAndPassword(email!!, password!!)
-            .addOnCompleteListener(application!!.mainExecutor, { task ->
+            .addOnCompleteListener(application!!.mainExecutor) { task ->
                 if (task.isSuccessful) {
                     liveFirebaseUser.postValue(firebaseAuth!!.currentUser)
                     errorStatus.postValue(false)
@@ -49,7 +49,7 @@ class FirebaseAuthManager(application: Application) {
                     Timber.i("Registration Failure: ${task.exception!!.message}")
                     errorStatus.postValue(true)
                 }
-            })
+            }
     }
 
     fun logOut() {

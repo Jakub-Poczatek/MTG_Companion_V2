@@ -1,6 +1,8 @@
 package org.wit.mtgcompanionv2.ui.home
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +19,7 @@ import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.databinding.HomeBinding
 import org.wit.mtgcompanionv2.databinding.NavHeaderBinding
 import org.wit.mtgcompanionv2.ui.auth.LoggedInViewModel
+import org.wit.mtgcompanionv2.ui.auth.Login
 
 class Home : AppCompatActivity() {
 
@@ -40,7 +43,7 @@ class Home : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.cardFragment, R.id.cardListFragment, R.id.mapFragment), drawerLayout)
+            R.id.cardFragment, R.id.cardListFragment, R.id.mapFragment, R.id.loginFragment), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         val navView = binding.navView
@@ -65,5 +68,13 @@ class Home : AppCompatActivity() {
         var headerView = binding.navView.getHeaderView(0)
         navHeaderBinding = NavHeaderBinding.bind(headerView)
         navHeaderBinding.navHeaderEmail.text = currentUser.email
+    }
+
+    fun signOut(item: MenuItem) {
+        loggedInViewModel.LogOut()
+        //Launch Login activity and clear the back stack to stop navigating back to the Home activity
+        val intent = Intent(this, Login::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 }
