@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.databinding.CardCardBinding
+import org.wit.mtgcompanionv2.firebase.FirebaseImageManager
 import org.wit.mtgcompanionv2.models.CardModel
+import timber.log.Timber
 
 interface CardListener {
     fun onCardClick(card: CardModel)
@@ -40,6 +42,7 @@ class CardAdapter constructor(
         fun bind(card: CardModel, listener: CardListener) {
             binding.root.tag = card
             binding.card = card
+            Timber.i("This is the card image URI: ${card.image}")
             Picasso.get().load(Uri.parse(card.image)).into(binding.cardCardArtImgView)
             binding.root.setOnClickListener { listener.onCardClick(card) }
         }

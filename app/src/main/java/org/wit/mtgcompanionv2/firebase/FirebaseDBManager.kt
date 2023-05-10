@@ -75,6 +75,8 @@ object FirebaseDBManager: CardStore {
             return
         }
         card.uid = key
+        card.image = "${FirebaseImageManager.pathToPhotos}$key.jpg"
+        Timber.i(card.image)
         val cardValues = card.toMap()
         val childAdd = HashMap<String, Any>()
         childAdd["/cards/$key"] = cardValues
@@ -95,5 +97,24 @@ object FirebaseDBManager: CardStore {
         childUpdate["/cards/$cardId"] = cardValues
         childUpdate["/user-cards/$userid/$cardId"] = cardValues
         database.updateChildren(childUpdate)
+    }
+
+    fun updateCardArtRef(userId: String, cardId: String){
+        val userCards = database.child("user-cards").child(userId)
+        val allCards = database.child("cards")
+
+        userCards.addListenerForSingleValueEvent(
+            object: ValueEventListener{
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.children.forEach{
+
+                    }
+                }
+            }
+        )
     }
 }

@@ -8,8 +8,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CardModel(
     var uid: String? = "",
-    var name: String = "N/A",
-    var type: String = "N/A",
+    var name: String = "",
+    var type: String = "",
     var power: Int = -1,
     var toughness: Int = -1,
     var neutral: Int = 0,
@@ -18,14 +18,15 @@ data class CardModel(
     var red: Int = 0,
     var blue: Int = 0,
     var green: Int = 0,
-    var description: String = "N/A",
+    var description: String = "",
     var rarity: Rarity = Rarity.Common,
     var colours: MutableList<Colour> = ArrayList<Colour>(),
-    var set: String = "N/A",
+    var set: String = "",
     var value: Double = -1.0,
-    var image: String = "N/A",
-    var email: String? = "joe@mail.com"
+    var image: String = "",
+    var email: String? = ""
 ): Parcelable{
+
     @Exclude
     fun toMap(): Map<String, Any?>{
         return mapOf(

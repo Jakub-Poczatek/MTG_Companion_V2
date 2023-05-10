@@ -17,14 +17,12 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.auth.FirebaseUser
-import com.squareup.picasso.Picasso
 import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.databinding.HomeBinding
 import org.wit.mtgcompanionv2.databinding.NavHeaderBinding
 import org.wit.mtgcompanionv2.firebase.FirebaseImageManager
 import org.wit.mtgcompanionv2.ui.auth.LoggedInViewModel
 import org.wit.mtgcompanionv2.ui.auth.Login
-import org.wit.mtgcompanionv2.utils.customTransformation
 import timber.log.Timber
 
 class Home : AppCompatActivity() {
@@ -74,7 +72,7 @@ class Home : AppCompatActivity() {
     }
 
     private fun updateNavHeader(currentUser: FirebaseUser) {
-        FirebaseImageManager.imageUri.observe(this) { result ->
+        FirebaseImageManager.userImageUri.observe(this) { result ->
             if (result == Uri.EMPTY) {
                 Timber.i("MTGComp NO Existing imageUri")
                 if (currentUser.photoUrl != null) {
@@ -97,7 +95,7 @@ class Home : AppCompatActivity() {
                 Timber.i("MTGComp Loading Existing imageUri")
                 FirebaseImageManager.updateUserImage(
                     currentUser.uid,
-                    FirebaseImageManager.imageUri.value,
+                    FirebaseImageManager.userImageUri.value,
                     navHeaderBinding.navHeaderImage, false
                 )
             }    }
