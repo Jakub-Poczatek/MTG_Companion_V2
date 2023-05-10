@@ -1,7 +1,7 @@
 package org.wit.mtgcompanionv2.utils
 
+import android.app.AlertDialog
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import org.wit.mtgcompanionv2.R
 

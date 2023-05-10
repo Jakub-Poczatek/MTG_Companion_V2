@@ -1,11 +1,13 @@
 package org.wit.mtgcompanionv2.ui.cardList
 
+import android.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -18,14 +20,19 @@ import org.wit.mtgcompanionv2.adapters.CardListener
 import org.wit.mtgcompanionv2.databinding.FragmentCardListBinding
 import org.wit.mtgcompanionv2.main.MTGCompanion
 import org.wit.mtgcompanionv2.models.CardModel
+import org.wit.mtgcompanionv2.ui.auth.LoggedInViewModel
+import org.wit.mtgcompanionv2.utils.createLoader
+import org.wit.mtgcompanionv2.utils.showLoader
 
 class CardListFragment : Fragment(), CardListener {
 
     lateinit var app: MTGCompanion
     private var _fragBinding: FragmentCardListBinding? = null
     private val fragBinding get() = _fragBinding!!
-    private lateinit var cardListViewModel: CardListViewModel
     private lateinit var navController: NavController
+    lateinit var loader : AlertDialog
+    private val cardListViewModel: CardListViewModel by activityViewModels()
+    private val loggedInViewModel: LoggedInViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +46,8 @@ class CardListFragment : Fragment(), CardListener {
             savedInstanceState: Bundle?): View? {
         _fragBinding = FragmentCardListBinding.inflate(inflater, container, false)
         val root = fragBinding.root
+        loader = createLoader(requireActivity())
         activity?.title = getString(R.string.cardListTitle)
-
-        cardListViewModel = ViewModelProvider(this)[CardListViewModel::class.java]
 
         val layoutManager = GridLayoutManager(requireContext(), 2)
         fragBinding.cardListRecycleView.layoutManager = layoutManager
@@ -101,7 +107,13 @@ class CardListFragment : Fragment(), CardListener {
 
     override fun onResume() {
         super.onResume()
-        cardListViewModel.load()
+        showLoader(loader, "Downloading Cards")
+        loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner, Observer { firebaseUser ->
+            if (firebaseUser != null) {
+                cardListViewModel.liveFirebaseUser.value = firebaseUser
+                cardListViewModel.load()
+            }
+        })
     }
 
     companion object {
