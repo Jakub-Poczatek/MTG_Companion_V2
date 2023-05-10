@@ -27,10 +27,7 @@ import org.wit.mtgcompanionv2.databinding.FragmentCardListBinding
 import org.wit.mtgcompanionv2.main.MTGCompanion
 import org.wit.mtgcompanionv2.models.CardModel
 import org.wit.mtgcompanionv2.ui.auth.LoggedInViewModel
-import org.wit.mtgcompanionv2.utils.SwipeToDeleteCallback
-import org.wit.mtgcompanionv2.utils.createLoader
-import org.wit.mtgcompanionv2.utils.hideLoader
-import org.wit.mtgcompanionv2.utils.showLoader
+import org.wit.mtgcompanionv2.utils.*
 
 class CardListFragment : Fragment(), CardListener {
 
@@ -88,6 +85,15 @@ class CardListFragment : Fragment(), CardListener {
         val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
         itemTouchDeleteHelper.attachToRecyclerView(fragBinding.cardListRecycleView)
 
+        val swipeEditHandler = object : SwipeToEditCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                onCardClick(viewHolder.itemView.tag as CardModel)
+            }
+        }
+        val itemTouchEditHelper = ItemTouchHelper(swipeEditHandler)
+        itemTouchEditHelper.attachToRecyclerView(fragBinding.cardListRecycleView)
+
+
         return root
     }
 
@@ -133,7 +139,7 @@ class CardListFragment : Fragment(), CardListener {
         }
     }
 
-    override fun onCardClick(card: CardModel, position: Int) {
+    override fun onCardClick(card: CardModel) {
         fragBinding.cardListSearchTxt.text.clear()
         val action = CardListFragmentDirections.actionCardListFragmentToCardFragment(true, card, false)
         findNavController().navigate(action)

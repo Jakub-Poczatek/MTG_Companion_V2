@@ -10,7 +10,7 @@ import org.wit.mtgcompanionv2.databinding.CardCardBinding
 import org.wit.mtgcompanionv2.models.CardModel
 
 interface CardListener {
-    fun onCardClick(card: CardModel, position: Int)
+    fun onCardClick(card: CardModel)
 }
 
 class CardAdapter constructor(private var cards: ArrayList<CardModel>, private val listener: CardListener)
@@ -49,9 +49,7 @@ class CardAdapter constructor(private var cards: ArrayList<CardModel>, private v
             binding.root.tag = card
             binding.card = card
             Picasso.get().load(Uri.parse(card.image)).into(binding.cardCardArtImgView)
-            binding.root.setOnClickListener {
-                listener.onCardClick(card, adapterPosition)
-            }
+            binding.root.setOnClickListener { listener.onCardClick(card) }
         }
     }
 

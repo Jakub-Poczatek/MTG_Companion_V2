@@ -55,8 +55,8 @@ abstract class SwipeToEditCallback(context: Context) : ItemTouchHelper.SimpleCal
         // Calculate position of Edit icon
         val editIconTop = itemView.top + (itemHeight - intrinsicHeight!!) / 2
         val editIconMargin = (itemHeight - intrinsicHeight) / 2
-        val editIconLeft = itemView.right - editIconMargin - intrinsicWidth!! - 810
-        val editIconRight = itemView.right - editIconMargin - 810
+        val editIconLeft = itemView.right - editIconMargin - intrinsicWidth!! - (intrinsicWidth * 4)
+        val editIconRight = itemView.right - editIconMargin - (intrinsicWidth * 4)
         val editIconBottom = editIconTop + intrinsicHeight
 
         // Draw the edit icon
