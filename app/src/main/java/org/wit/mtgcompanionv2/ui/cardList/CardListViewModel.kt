@@ -31,4 +31,13 @@ class CardListViewModel : ViewModel() {
             Timber.i("Cards List Load Error : $e.message")
         }
     }
+
+    fun delete(userid: String, id: String){
+        try{
+            FirebaseDBManager.delete(userid, id)
+            Timber.i("Card Delete Success")
+        } catch (e: Exception) {
+            Timber.i("Card Delete Error: ${e.message}")
+        }
+    }
 }

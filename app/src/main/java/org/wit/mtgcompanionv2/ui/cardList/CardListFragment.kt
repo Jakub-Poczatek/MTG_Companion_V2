@@ -58,12 +58,15 @@ class CardListFragment : Fragment(), CardListener {
             findNavController().navigate(action)
         }
 
+        setSwipeRefresh()
+
         showLoader(loader, "Downloading Cards")
         cardListViewModel.observableCardList.observe(viewLifecycleOwner, Observer {
             cards ->
             cards?.let {
                 render(cards as ArrayList<CardModel>)
                 hideLoader(loader)
+                checkSwipeRefresh()
             }
         })
         //fragBinding.cardListRecycleView.adapter = CardAdapter(cardListViewModel.observableCardList.value!!, this)
@@ -85,6 +88,21 @@ class CardListFragment : Fragment(), CardListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return NavigationUI.onNavDestinationSelected(item, requireView().findNavController())
                 || super.onOptionsItemSelected(item)
+    }
+
+    // Swipe Functions
+
+    private fun setSwipeRefresh() {
+        fragBinding.swipeRefresh.setOnRefreshListener {
+            fragBinding.swipeRefresh.isRefreshing = true
+            showLoader(loader,"Downloading Donations")
+            cardListViewModel.load()
+        }
+    }
+
+    private fun checkSwipeRefresh() {
+        if (fragBinding.swipeRefresh.isRefreshing)
+            fragBinding.swipeRefresh.isRefreshing = false
     }
 
     private fun render(cardsList: List<CardModel>) {
