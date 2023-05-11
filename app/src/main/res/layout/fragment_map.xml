@@ -38,7 +38,7 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0">
@@ -53,10 +53,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@{place.name}"
                     android:textSize="26sp"
-                    app:layout_constraintEnd_toStartOf="@id/mapPlaceRatingTxt"
+                    app:layout_constraintEnd_toStartOf="@+id/divider"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -82,56 +82,94 @@
                     app:layout_constraintStart_toStartOf="@id/mapPlaceNameTxt"
                     app:layout_constraintTop_toBottomOf="@id/mapPlaceAddressTxt" />
 
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.6"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
                     android:id="@+id/mapPlaceRatingTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:minWidth="50dp"
                     android:text="@{Double.toString(place.rating)}"
                     android:textSize="24sp"
-                    app:layout_constraintEnd_toStartOf="@id/mapRatingsStarIcon"
-                    app:layout_constraintStart_toEndOf="@id/mapPlaceNameTxt"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/mapRatingsStarIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginEnd="8dp"
-                    android:contentDescription="@string/mapStarDesc"
-                    app:layout_constraintBottom_toBottomOf="@id/mapPlaceRatingTxt"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/mapPlaceRatingTxt"
-                    app:layout_constraintTop_toTopOf="@id/mapPlaceRatingTxt"
-                    app:srcCompat="@android:drawable/btn_star_big_on"
-                    tools:ignore="ImageContrastCheck" />
+                    app:layout_constraintBottom_toTopOf="@id/mapOpenTxt"
+                    app:layout_constraintEnd_toStartOf="@+id/mapTotalUserRatingsTxt"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/divider"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.5" />
 
                 <TextView
                     android:id="@+id/mapTotalUserRatingsTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-4dp"
-                    android:minWidth="64dp"
+                    android:minWidth="16dp"
                     android:text="@{Integer.toString(place.totalUserRatings)}"
                     android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@id/mapRatingsStarIcon"
-                    app:layout_constraintStart_toStartOf="@id/mapPlaceRatingTxt"
-                    app:layout_constraintTop_toBottomOf="@id/mapPlaceRatingTxt" />
+                    app:layout_constraintBottom_toBottomOf="@id/mapPlaceRatingTxt"
+                    app:layout_constraintEnd_toStartOf="@id/mapRatingsStarIcon"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@id/mapPlaceRatingTxt"
+                    app:layout_constraintTop_toTopOf="@id/mapPlaceRatingTxt" />
+
+                <ImageView
+                    android:id="@+id/mapRatingsStarIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:contentDescription="@string/mapStarDesc"
+                    app:layout_constraintBottom_toBottomOf="@id/mapPlaceRatingTxt"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/mapTotalUserRatingsTxt"
+                    app:layout_constraintTop_toTopOf="@id/mapPlaceRatingTxt"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:srcCompat="@android:drawable/btn_star_big_on"
+                    tools:ignore="ImageContrastCheck" />
 
                 <TextView
                     android:id="@+id/mapOpenTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:layout_marginBottom="24dp"
                     android:minWidth="64dp"
                     android:text="@{place.open ? `Open` : `Closed`}"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@id/mapRatingsStarIcon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@id/mapPlaceRatingTxt"
-                    app:layout_constraintTop_toBottomOf="@id/mapTotalUserRatingsTxt" />
+                    app:layout_constraintTop_toBottomOf="@id/mapTotalUserRatingsTxt"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <ImageButton
+                    android:id="@+id/directionsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-8dp"
+                    android:layout_marginBottom="8dp"
+                    android:contentDescription="DirectionsButton"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/mapOpenTxt"
+                    app:layout_constraintTop_toTopOf="@id/mapOpenTxt"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:srcCompat="@drawable/ic_maps_directions"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
+                    tools:layout_constraintEnd_toEndOf="parent"
+                    tools:layout_constraintTop_toTopOf="@id/mapOpenTxt" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

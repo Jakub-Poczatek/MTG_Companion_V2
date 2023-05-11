@@ -3,15 +3,14 @@ package org.wit.mtgcompanionv2.ui.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
+import android.graphics.Color
+import android.location.Location
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -21,11 +20,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import com.google.maps.android.PolyUtil
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -53,6 +49,7 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
     private lateinit var map: GoogleMap
     private lateinit var client: HttpClient
     private val places = ArrayList<PlaceModel>()
+    private var polyLine: Polyline? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,6 +128,9 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
         val placeId = marker.tag
         val foundPlace: PlaceModel? = places.find { p -> p.id == placeId}
         fragBinding.place = foundPlace
+        fragBinding.directionsButton.setOnClickListener{
+            calculatePath(places[0].loc, foundPlace!!.loc)
+        }
         return false
     }
 
@@ -242,6 +242,37 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
             ))
         } else {
             retrieveLocation()
+        }
+    }
+
+    private fun calculatePath(origin: LatLng, destination: LatLng){
+        runBlocking {
+            Timber.i("Starting directions retrieve")
+            val url =
+                "https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$MAPS_API_KEY"
+            val response = client.get(url)
+            val responseJson = JSONObject(response.body<String>())
+            val points = mutableListOf<LatLng>()
+            val routes = responseJson.getJSONArray("routes")
+            val legs = routes.getJSONObject(0).getJSONArray("legs")
+            val steps = legs.getJSONObject(0).getJSONArray("steps")
+
+            for (i in 0 until steps.length()) {
+                val step = steps.getJSONObject(i)
+                val polyline = step.getJSONObject("polyline")
+                val encodedPoints = polyline.getString("points")
+                val decodedPoints = PolyUtil.decode(encodedPoints)
+
+                points.addAll(decodedPoints)
+            }
+
+            val polylineOptions = PolylineOptions()
+                .addAll(points)
+                .width(5f)
+                .color(Color.RED)
+
+            polyLine?.remove()
+            polyLine = map.addPolyline(polylineOptions)
         }
     }
 }
