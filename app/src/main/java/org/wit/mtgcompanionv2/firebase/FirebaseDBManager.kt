@@ -13,7 +13,25 @@ object FirebaseDBManager: CardStore {
     var database: DatabaseReference = FirebaseDatabase.getInstance().reference
 
     override fun findAll(cardsList: MutableLiveData<List<CardModel>>) {
-        TODO("Not yet implemented")
+        database.child("cards")
+            .addValueEventListener(object: ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Timber.i("Firebase")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val localList = ArrayList<CardModel>()
+                    val children = snapshot.children
+                    children.forEach{
+                        val card = it.getValue(CardModel::class.java)
+                        localList.add(card!!)
+                    }
+                    database.child("cards")
+                        .removeEventListener(this)
+
+                    cardsList.value = localList
+                }
+            })
     }
 
     override fun findAll(userid: String, cardsList: MutableLiveData<List<CardModel>>) {
@@ -57,6 +75,8 @@ object FirebaseDBManager: CardStore {
             return
         }
         card.uid = key
+        //card.image = "${FirebaseImageManager.pathToPhotos}$key.jpg"
+        //Timber.i(card.image)
         val cardValues = card.toMap()
         val childAdd = HashMap<String, Any>()
         childAdd["/cards/$key"] = cardValues
@@ -77,5 +97,24 @@ object FirebaseDBManager: CardStore {
         childUpdate["/cards/$cardId"] = cardValues
         childUpdate["/user-cards/$userid/$cardId"] = cardValues
         database.updateChildren(childUpdate)
+    }
+
+    fun updateCardArtRef(userId: String, cardId: String){
+        val userCards = database.child("user-cards").child(userId)
+        val allCards = database.child("cards")
+
+        userCards.addListenerForSingleValueEvent(
+            object: ValueEventListener{
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.children.forEach{
+
+                    }
+                }
+            }
+        )
     }
 }

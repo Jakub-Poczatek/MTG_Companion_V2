@@ -25,6 +25,7 @@ import org.wit.mtgcompanion.helpers.showImagePicker
 import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.databinding.FragmentCardBinding
 import org.wit.mtgcompanionv2.firebase.FirebaseDBManager
+import org.wit.mtgcompanionv2.firebase.FirebaseImageManager
 import org.wit.mtgcompanionv2.main.MTGCompanion
 import org.wit.mtgcompanionv2.models.CardModel
 import org.wit.mtgcompanionv2.models.Colour
@@ -178,6 +179,11 @@ class CardFragment : Fragment() {
                     //app.cards.create(card.copy())
                     card.email = loggedInViewModel.liveFirebaseUser.value?.email!!
                     cardViewModel.addCard(loggedInViewModel.liveFirebaseUser, card)
+                    FirebaseImageManager.updateCardArt(
+                        cardListViewModel.liveFirebaseUser.value!!.uid,
+                        card,
+                        Uri.parse(card.image)
+                    )
                     defaultAllFields()
                     if(args.quickAdd)
                         findNavController().popBackStack()
