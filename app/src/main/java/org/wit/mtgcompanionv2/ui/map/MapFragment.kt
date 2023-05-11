@@ -3,16 +3,14 @@ package org.wit.mtgcompanionv2.ui.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.Color
+import android.location.Location
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
@@ -129,6 +127,9 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
         val placeId = marker.tag
         val foundPlace: PlaceModel? = places.find { p -> p.id == placeId}
         fragBinding.place = foundPlace
+        fragBinding.directionsButton.setOnClickListener{
+            calculatePath(places[0].loc, foundPlace!!.loc)
+        }
         return false
     }
 
@@ -215,7 +216,6 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
             fragBinding.place = foundPlace
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(places[0].loc, 12f))
         }
-        createTestPath()
     }
 
     private fun retrieveDefaultLocation(){
@@ -244,13 +244,11 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
         }
     }
 
-    private fun createTestPath(){
+    private fun calculatePath(origin: LatLng, destination: LatLng){
         runBlocking {
-            var loc1 = places[0].loc
-            var loc2 = places[1].loc
             Timber.i("Starting directions retrieve")
             val url =
-                "https://maps.googleapis.com/maps/api/directions/json?origin=${loc1.latitude},${loc1.longitude}&destination=${loc2.latitude},${loc2.longitude}&key=$MAPS_API_KEY"
+                "https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$MAPS_API_KEY"
             val response = client.get(url)
             val responseJson = JSONObject(response.body<String>())
             val points = mutableListOf<LatLng>()
