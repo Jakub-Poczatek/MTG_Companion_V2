@@ -5,6 +5,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +26,8 @@ import org.wit.mtgcompanionv2.databinding.NavHeaderBinding
 import org.wit.mtgcompanionv2.firebase.FirebaseImageManager
 import org.wit.mtgcompanionv2.ui.auth.LoggedInViewModel
 import org.wit.mtgcompanionv2.ui.auth.Login
+import org.wit.mtgcompanionv2.utils.readImageUri
+import org.wit.mtgcompanionv2.utils.showImagePicker
 import timber.log.Timber
 
 class Home : AppCompatActivity() {
@@ -33,6 +38,7 @@ class Home : AppCompatActivity() {
     private lateinit var navHeaderBinding: NavHeaderBinding
     private lateinit var loggedInViewModel: LoggedInViewModel
     private lateinit var headerView : View
+    private lateinit var intentLauncher : ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +70,7 @@ class Home : AppCompatActivity() {
             if (firebaseUser != null)
                 updateNavHeader(firebaseUser)
         })
+        registerImagePickerCallback()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -109,6 +116,9 @@ class Home : AppCompatActivity() {
         Timber.i("MTGComp Init Nav Header")
         headerView = binding.navView.getHeaderView(0)
         navHeaderBinding = NavHeaderBinding.bind(headerView)
+        navHeaderBinding.navHeaderImage.setOnClickListener {
+            showImagePicker(intentLauncher)
+        }
     }
 
 
@@ -119,4 +129,24 @@ class Home : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
+
+    private fun registerImagePickerCallback() {
+        intentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                when(result.resultCode){
+                    RESULT_OK -> {
+                        if (result.data != null) {
+                            Timber.i("DX registerPickerCallback() ${readImageUri(result.resultCode, result.data).toString()}")
+                            FirebaseImageManager
+                                .updateUserImage(loggedInViewModel.liveFirebaseUser.value!!.uid,
+                                    readImageUri(result.resultCode, result.data),
+                                    navHeaderBinding.navHeaderImage,
+                                    true)
+                        } // end of if
+                    }
+                    RESULT_CANCELED -> { } else -> { }
+                }
+            }
+    }
+
 }
