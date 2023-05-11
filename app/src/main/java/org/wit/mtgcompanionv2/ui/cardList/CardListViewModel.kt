@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import org.wit.mtgcompanionv2.firebase.FirebaseDBManager
+import org.wit.mtgcompanionv2.firebase.FirebaseImageManager
 //import org.wit.mtgcompanionv2.models.CardManager
 import org.wit.mtgcompanionv2.models.CardModel
 import timber.log.Timber
@@ -37,6 +38,7 @@ class CardListViewModel : ViewModel() {
     fun delete(userid: String, id: String){
         try{
             FirebaseDBManager.delete(userid, id)
+            FirebaseImageManager.deleteCardArt(userid, id)
             Timber.i("Card Delete Success")
         } catch (e: Exception) {
             Timber.i("Card Delete Error: ${e.message}")

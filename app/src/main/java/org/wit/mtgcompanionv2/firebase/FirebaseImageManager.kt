@@ -142,10 +142,8 @@ object FirebaseImageManager {
 
     fun updateCardArt(userid: String, card: CardModel, uri: Uri){
         Picasso.get().load(uri)
-            .resize(200, 200)
-            .transform(customTransformation())
+            .resize(200, 250)
             .memoryPolicy(MemoryPolicy.NO_CACHE)
-            .centerCrop()
             .into(object : Target {
                 override fun onBitmapLoaded(bitmap: Bitmap?,
                                             from: Picasso.LoadedFrom?
@@ -161,5 +159,9 @@ object FirebaseImageManager {
 
                 override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
             })
+    }
+
+    fun deleteCardArt(userId: String, cardId: String){
+        storage.child("photos").child(userId).child("${cardId}.jpg").delete()
     }
 }
