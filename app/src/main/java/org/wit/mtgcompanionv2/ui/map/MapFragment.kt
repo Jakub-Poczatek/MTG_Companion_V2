@@ -49,6 +49,7 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
     private lateinit var map: GoogleMap
     private lateinit var client: HttpClient
     private val places = ArrayList<PlaceModel>()
+    private var polyLine: Polyline? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -270,7 +271,8 @@ class MapFragment : Fragment(), GoogleMap.OnMarkerClickListener {
                 .width(5f)
                 .color(Color.RED)
 
-            map.addPolyline(polylineOptions)
+            polyLine?.remove()
+            polyLine = map.addPolyline(polylineOptions)
         }
     }
 }
