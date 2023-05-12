@@ -1,6 +1,5 @@
 package org.wit.mtgcompanionv2.firebase
 
-import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -34,7 +33,7 @@ object FirebaseDBManager: CardStore {
             })
     }
 
-    override fun findAll(userid: String, cardsList: MutableLiveData<List<CardModel>>) {
+    override fun findAll(userid: String, cardsList: MutableLiveData<List<CardModel>>, sortTerm: SortTerm) {
         database.child("user-cards").child(userid)
             .addValueEventListener(object: ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -50,6 +49,16 @@ object FirebaseDBManager: CardStore {
                     }
                     database.child("user-cards").child(userid)
                         .removeEventListener(this)
+
+                    when (sortTerm) {
+                        SortTerm.None -> Timber.i("No sorting needed")
+                        SortTerm.AscendingPower -> localList.sortBy { it.power }
+                        SortTerm.DescendingPower -> localList.sortByDescending { it.power }
+                        SortTerm.AscendingToughness -> localList.sortBy { it.toughness }
+                        SortTerm.DescendingToughness -> localList.sortByDescending { it.toughness }
+                        SortTerm.AscendingTotalCost -> localList.sortBy { it.neutral + it.white + it.black + it.red + it.blue + it.green }
+                        SortTerm.DescendingTotalCost -> localList.sortByDescending { it.neutral + it.white + it.black + it.red + it.blue + it.green }
+                    }
 
                     cardsList.value = localList
                 }
@@ -117,4 +126,14 @@ object FirebaseDBManager: CardStore {
             }
         )
     }
+}
+
+public enum class SortTerm{
+    None,
+    AscendingPower,
+    DescendingPower,
+    AscendingToughness,
+    DescendingToughness,
+    AscendingTotalCost,
+    DescendingTotalCost
 }

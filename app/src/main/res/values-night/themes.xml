@@ -2,15 +2,61 @@
     <!-- Base application theme. -->
     <style name="Theme.MTGCompanionV2" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple200</item>
-        <item name="colorPrimaryVariant">@color/purple700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/purple200Dark</item>
+        <item name="colorPrimaryVariant">@color/purple700Dark</item>
+        <item name="colorOnPrimary">@color/blackDark</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal200</item>
-        <item name="colorSecondaryVariant">@color/teal200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/teal200Dark</item>
+        <item name="colorSecondaryVariant">@color/teal200Dark</item>
+        <item name="colorOnSecondary">@color/blackDark</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <!-- FireBase Stuff -->
+
+    <!-- Dark Buttons -->
+    <style name="ThemeOverlay.MyDarkButton" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="colorButtonNormal">@color/grey500Dark</item>
+        <item name="colorAccent">@color/colorAccentDark</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="toggleStyle">
+        <item name="colorControlActivated">@color/colorWhiteDark</item>
+        <item name="colorControlHighlight">@color/blackDark</item>
+    </style>
+
+    <style name="ThemeOverlay.MyTextDetail" parent="Theme.MTGCompanionV2">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fadeScrollbars">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">5</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="ThemeOverlay.MyTitleText" parent="Theme.MTGCompanionV2">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="ThemeOverlay.FirebaseIcon" parent="Theme.MTGCompanionV2">
+        <item name="android:layout_marginTop">@dimen/icon_top_margin</item>
+        <item name="android:layout_marginBottom">@dimen/icon_bottom_margin</item>
+    </style>
+
+    <style name="Theme.MTGCompanionV2.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.MTGCompanionV2.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.MTGCompanionV2.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 </resources>

@@ -1,11 +1,15 @@
 package org.wit.mtgcompanionv2.ui.cardList
 
 import android.app.AlertDialog
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.support.annotation.DrawableRes
 import android.view.*
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.children
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -21,9 +25,11 @@ import org.wit.mtgcompanionv2.R
 import org.wit.mtgcompanionv2.adapters.CardAdapter
 import org.wit.mtgcompanionv2.adapters.CardListener
 import org.wit.mtgcompanionv2.databinding.FragmentCardListBinding
+import org.wit.mtgcompanionv2.firebase.SortTerm
 import org.wit.mtgcompanionv2.models.CardModel
 import org.wit.mtgcompanionv2.ui.auth.LoggedInViewModel
 import org.wit.mtgcompanionv2.utils.*
+import timber.log.Timber
 
 class CardListFragment : Fragment(), CardListener {
 
@@ -32,6 +38,7 @@ class CardListFragment : Fragment(), CardListener {
     lateinit var loader : AlertDialog
     private val cardListViewModel: CardListViewModel by activityViewModels()
     private val loggedInViewModel: LoggedInViewModel by activityViewModels()
+    private var sortTerm: SortTerm = SortTerm.None
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,9 +117,9 @@ class CardListFragment : Fragment(), CardListener {
     private fun setSwipeRefresh() {
         fragBinding.swipeRefresh.setOnRefreshListener {
             fragBinding.swipeRefresh.isRefreshing = true
-            showLoader(loader,"Downloading Donations")
+            showLoader(loader,"Downloading Cards")
             if (cardListViewModel.readOnly.value!!) cardListViewModel.loadAll()
-            else cardListViewModel.load()
+            else cardListViewModel.load(sortTerm)
         }
     }
 
@@ -159,7 +166,27 @@ class CardListFragment : Fragment(), CardListener {
 
                 toggleCards.setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) cardListViewModel.loadAll()
-                    else cardListViewModel.load()
+                    else cardListViewModel.load(sortTerm)
+                }
+
+                var sortItem = menu.findItem(R.id.sortMenuParent).subMenu as Menu
+                sortItem.children.forEach { itemInMenu -> itemInMenu.setOnMenuItemClickListener {
+                    sortTerm = SortTerm.valueOf(it.title.toString().replace(" ", ""))
+                    showLoader(loader,"Downloading Cards")
+                    if (cardListViewModel.readOnly.value!!) cardListViewModel.loadAll()
+                    else cardListViewModel.load(sortTerm)
+                    true
+                } }
+
+                var darkMode = menu.findItem(R.id.toggleDarkMode) as MenuItem
+                darkMode.setOnMenuItemClickListener {
+                    if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    }
+                    else {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    }
+                    true
                 }
             }
 
@@ -177,7 +204,7 @@ class CardListFragment : Fragment(), CardListener {
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner, Observer { firebaseUser ->
             if (firebaseUser != null) {
                 cardListViewModel.liveFirebaseUser.value = firebaseUser
-                cardListViewModel.load()
+                cardListViewModel.load(sortTerm)
             }
         })
     }
@@ -206,6 +233,10 @@ class CardListFragment : Fragment(), CardListener {
                     ArrayList<CardModel>(cardListViewModel.observableCardList.value!!), this, cardListViewModel.readOnly.value!!)
             }
         }
+    }
+
+    private fun sortCardList(){
+
     }
 
     override fun onDestroyView() {

@@ -43,8 +43,9 @@
         <action
             android:id="@+id/action_cardListFragment_to_cardFragment"
             app:destination="@id/cardFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popExitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_cardListFragment_to_mapFragment"
             app:destination="@id/mapFragment"
@@ -72,6 +73,9 @@
         <action
             android:id="@+id/action_mapFragment_to_login2"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_cardListFragment2"
+            app:destination="@id/cardListFragment" />
     </fragment>
     <activity
         android:id="@+id/loginFragment"

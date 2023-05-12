@@ -66,4 +66,13 @@
     <string name="firebase_status_fmt">Firebase User: %s</string>
     <string name="messageLoading">Please wait while the cards are loading…</string>
     <string name="select_profile_image">Select Profile Image</string>
+    <string name="sortTermNone">None</string>
+    <string name="sortTermAscendingPower">Ascending Power</string>
+    <string name="sortTermDescendingPower">Descending Power</string>
+    <string name="sortTermAscendingToughness">Ascending Toughness</string>
+    <string name="sortTermDescendingToughness">Descending Toughness</string>
+    <string name="sortTermAscendingTotalCost">Ascending Total Cost</string>
+    <string name="sortTermDescendingTotalCost">Descending Total Cost</string>
+    <string name="cardDescriptionHint">Enter card description</string>
+    <string name="cardNameHint">Enter the card name</string>
 </resources>
