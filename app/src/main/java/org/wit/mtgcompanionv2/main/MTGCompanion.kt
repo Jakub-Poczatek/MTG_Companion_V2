@@ -1,6 +1,7 @@
 package org.wit.mtgcompanionv2.main
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
 //import org.wit.mtgcompanionv2.models.CardManager
 import timber.log.Timber
 

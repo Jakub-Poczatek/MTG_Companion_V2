@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/toggleDarkMode"
+        android:icon="@drawable/ic_menu_moon"
+        android:title=""
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/toggleCards"
         android:title=""
         app:actionLayout="@layout/togglebutton_layout"

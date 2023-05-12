@@ -1,8 +1,11 @@
 package org.wit.mtgcompanionv2.ui.cardList
 
 import android.app.AlertDialog
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.support.annotation.DrawableRes
 import android.view.*
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -174,6 +177,17 @@ class CardListFragment : Fragment(), CardListener {
                     else cardListViewModel.load(sortTerm)
                     true
                 } }
+
+                var darkMode = menu.findItem(R.id.toggleDarkMode) as MenuItem
+                darkMode.setOnMenuItemClickListener {
+                    if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    }
+                    else {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    }
+                    true
+                }
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
