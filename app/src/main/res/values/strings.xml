@@ -73,4 +73,6 @@
     <string name="sortTermDescendingToughness">Descending Toughness</string>
     <string name="sortTermAscendingTotalCost">Ascending Total Cost</string>
     <string name="sortTermDescendingTotalCost">Descending Total Cost</string>
+    <string name="cardDescriptionHint">Enter card description</string>
+    <string name="cardNameHint">Enter the card name</string>
 </resources>

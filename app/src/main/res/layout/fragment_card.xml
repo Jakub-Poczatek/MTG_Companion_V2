@@ -25,29 +25,32 @@
             android:src="@android:drawable/ic_menu_gallery"
             app:layout_constraintBottom_toBottomOf="@+id/cardFragmentToughnessSeeker"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cardNameTxt"
-            app:layout_constraintTop_toTopOf="@id/cardNameTxt"
+            app:layout_constraintStart_toEndOf="@id/cardNameTxtLayout"
+            app:layout_constraintTop_toTopOf="@id/cardNameTxtLayout"
             app:srcCompat="@drawable/ic_default_card_art"
             tools:ignore="ImageContrastCheck" />
 
-        <EditText
-            android:id="@+id/cardNameTxt"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cardNameTxtLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:hint="@string/cardName"
-            android:importantForAutofill="no"
-            android:inputType="textShortMessage"
-            android:maxLength="64"
-            android:minHeight="48dp"
-            android:text="@{card.name}"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:hint="@string/cardNameHint"
             app:layout_constraintEnd_toStartOf="@id/cardArtImgVw"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="TextContrastCheck" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/cardNameTxt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAutofill="no"
+                android:inputType="textShortMessage"
+                android:text="@{card.name}"
+                tools:ignore="LabelFor,SpeakableTextPresentCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Spinner
             android:id="@+id/cardTypeSpinner"
@@ -57,9 +60,9 @@
             android:entries="@array/cardTypes"
             android:minHeight="48dp"
             android:spinnerMode="dropdown"
-            app:layout_constraintEnd_toEndOf="@id/cardNameTxt"
-            app:layout_constraintStart_toStartOf="@id/cardNameTxt"
-            app:layout_constraintTop_toBottomOf="@id/cardNameTxt" />
+            app:layout_constraintEnd_toEndOf="@id/cardNameTxtLayout"
+            app:layout_constraintStart_toStartOf="@id/cardNameTxtLayout"
+            app:layout_constraintTop_toBottomOf="@id/cardNameTxtLayout" />
 
         <TextView
             android:id="@+id/cardFragmentPowerLbl"
@@ -127,7 +130,7 @@
             android:layout_height="100dp"
             android:layout_marginTop="8dp"
             android:value="@{card.neutral}"
-            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMlTxtLayout"
             app:layout_constraintEnd_toEndOf="@+id/cardFragmentNtrlLbl"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/cardFragmentNtrlLbl"
@@ -154,7 +157,7 @@
             android:layout_height="100dp"
             android:layout_marginTop="8dp"
             android:value="@{card.white}"
-            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMlTxtLayout"
             app:layout_constraintEnd_toEndOf="@+id/cardFragmentWhtLbl"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/cardFragmentWhtLbl"
@@ -181,7 +184,7 @@
             android:layout_height="100dp"
             android:layout_marginTop="8dp"
             android:value="@{card.black}"
-            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMlTxtLayout"
             app:layout_constraintEnd_toEndOf="@+id/cardFragmentBlkLbl"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/cardFragmentBlkLbl"
@@ -208,7 +211,7 @@
             android:layout_height="100dp"
             android:layout_marginTop="8dp"
             android:value="@{card.red}"
-            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMlTxtLayout"
             app:layout_constraintEnd_toEndOf="@+id/cardFragmentRedLbl"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/cardFragmentRedLbl"
@@ -235,7 +238,7 @@
             android:layout_height="100dp"
             android:layout_marginTop="8dp"
             android:value="@{card.blue}"
-            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMlTxtLayout"
             app:layout_constraintEnd_toEndOf="@+id/cardFragmentBluLbl"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/cardFragmentBluLbl"
@@ -262,32 +265,39 @@
             android:layout_height="100dp"
             android:layout_marginTop="8dp"
             android:value="@{card.green}"
-            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintBottom_toTopOf="@+id/cardDescriptionMlTxtLayout"
             app:layout_constraintEnd_toEndOf="@+id/cardFragmentGrnLbl"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/cardFragmentGrnLbl"
             app:layout_constraintTop_toBottomOf="@+id/cardFragmentGrnLbl"
             app:layout_constraintVertical_bias="0.0" />
 
-        <EditText
-            android:id="@+id/cardDescriptionMLTxt"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cardDescriptionMlTxtLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:hint="@string/cardDescriptionHint"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:ems="10"
             android:gravity="start|top"
-            android:hint="@string/cardDescription"
-            android:importantForAutofill="no"
-            android:inputType="textMultiLine"
             android:maxHeight="144dp"
             android:minHeight="48dp"
-            android:text="@{card.description}"
-            android:textColorHint="#757575"
             app:layout_constraintEnd_toStartOf="@+id/cardRaritySpinner"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/cardFragmentNtrlPicker"
-            app:layout_constraintTop_toBottomOf="@+id/cardFragmentNtrlPicker" />
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentNtrlPicker"
+            >
+
+            <EditText
+                android:id="@+id/cardDescriptionMLTxt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:text="@{card.description}"
+                tools:ignore="LabelFor,SpeakableTextPresentCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Spinner
             android:id="@+id/cardRaritySpinner"
@@ -299,52 +309,70 @@
             android:minHeight="48dp"
             android:spinnerMode="dropdown"
             app:layout_constraintEnd_toEndOf="@+id/cardFragmentGrnPicker"
-            app:layout_constraintStart_toEndOf="@+id/cardDescriptionMLTxt"
+            app:layout_constraintStart_toEndOf="@+id/cardDescriptionMlTxtLayout"
             app:layout_constraintTop_toBottomOf="@+id/cardFragmentGrnPicker" />
 
-        <EditText
-            android:id="@+id/cardFragmentSetEdit"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cardFragmentSetEditLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="@string/cardSet"
-            android:importantForAutofill="no"
-            android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:text="@{card.set}"
             app:layout_constraintEnd_toEndOf="@+id/cardRaritySpinner"
             app:layout_constraintStart_toStartOf="@+id/cardRaritySpinner"
-            app:layout_constraintTop_toBottomOf="@+id/cardRaritySpinner" />
+            app:layout_constraintTop_toBottomOf="@+id/cardRaritySpinner"
+            >
 
-        <EditText
-            android:id="@+id/cardFragmentValueEdit"
+            <EditText
+                android:id="@+id/cardFragmentSetEdit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/cardSet"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:text="@{card.set}"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/cardFragmentValueEditLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:hint="@string/cardValue"
-            android:importantForAutofill="no"
-            android:inputType="numberDecimal"
             android:minHeight="48dp"
-            android:textColorHint="#757575"
-            android:text="@{card.value >= 0.0 ? Double.toString(card.value) : ``}"
-            app:layout_constraintEnd_toEndOf="@+id/cardFragmentSetEdit"
-            app:layout_constraintStart_toStartOf="@+id/cardFragmentSetEdit"
-            app:layout_constraintTop_toBottomOf="@+id/cardFragmentSetEdit" />
+            app:layout_constraintEnd_toEndOf="@+id/cardFragmentSetEditLayout"
+            app:layout_constraintStart_toStartOf="@+id/cardFragmentSetEditLayout"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentSetEditLayout"
+            >
+
+            <EditText
+                android:id="@+id/cardFragmentValueEdit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/cardValue"
+                android:importantForAutofill="no"
+                android:inputType="numberDecimal"
+                android:text="@{card.value >= 0.0 ? Double.toString(card.value) : ``}"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/addCardBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="24dp"
             android:text="@string/button_addCard"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentValueEditLayout"
+            app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
