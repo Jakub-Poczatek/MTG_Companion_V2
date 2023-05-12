@@ -73,17 +73,17 @@
             app:layout_constraintTop_toBottomOf="@+id/cardTypeSpinner" />
 
         <SeekBar
-            android:id="@+id/cardFragmentToughnessSeeker"
+            android:id="@+id/cardFragmentPowerSeeker"
             style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="0dp"
             android:layout_height="16dp"
             android:layout_marginTop="4dp"
             android:max="10"
             android:progress="@{card.power}"
-            app:layout_constraintEnd_toEndOf="@+id/cardFragmentPowerSeeker"
+            app:layout_constraintEnd_toEndOf="@+id/cardTypeSpinner"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/cardFragmentPowerSeeker"
-            app:layout_constraintTop_toBottomOf="@+id/cardFragmentToughnessLbl" />
+            app:layout_constraintStart_toStartOf="@+id/cardTypeSpinner"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentPowerLbl" />
 
         <TextView
             android:id="@+id/cardFragmentToughnessLbl"
@@ -97,17 +97,17 @@
             app:layout_constraintTop_toBottomOf="@+id/cardFragmentPowerSeeker" />
 
         <SeekBar
-            android:id="@+id/cardFragmentPowerSeeker"
+            android:id="@+id/cardFragmentToughnessSeeker"
             style="@style/Widget.AppCompat.SeekBar.Discrete"
             android:layout_width="0dp"
             android:layout_height="16dp"
             android:layout_marginTop="4dp"
             android:max="10"
             android:progress="@{card.toughness}"
-            app:layout_constraintEnd_toEndOf="@+id/cardTypeSpinner"
+            app:layout_constraintEnd_toEndOf="@+id/cardFragmentPowerSeeker"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/cardTypeSpinner"
-            app:layout_constraintTop_toBottomOf="@+id/cardFragmentPowerLbl" />
+            app:layout_constraintStart_toStartOf="@+id/cardFragmentPowerSeeker"
+            app:layout_constraintTop_toBottomOf="@+id/cardFragmentToughnessLbl" />
 
         <TextView
             android:id="@+id/cardFragmentNtrlLbl"
