@@ -2,13 +2,45 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menuItemCardList"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/toggleCards"
         android:title=""
         app:actionLayout="@layout/togglebutton_layout"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/sortMenuParent"
+        android:title=""
+        android:icon="@drawable/ic_menu_sort"
+        app:showAsAction="ifRoom">
+
+        <menu
+            android:id="@+id/sortMenu">
+            <item
+                android:id="@+id/menuSortNone"
+                android:title="@string/sortTermNone" />
+
+            <item
+                android:id="@+id/menuSortAscPower"
+                android:title="@string/sortTermAscendingPower" />
+
+            <item
+                android:id="@+id/menuSortDescPower"
+                android:title="@string/sortTermDescendingPower" />
+
+            <item
+                android:id="@+id/menuSortAscToughness"
+                android:title="@string/sortTermAscendingToughness" />
+
+            <item
+                android:id="@+id/menuSortDescToughness"
+                android:title="@string/sortTermDescendingToughness" />
+
+            <item
+                android:id="@+id/menuSortAscTotalCost"
+                android:title="@string/sortTermAscendingTotalCost" />
+
+            <item
+                android:id="@+id/menuSortDescTotalCost"
+                android:title="@string/sortTermDescendingTotalCost" />
+        </menu>
+    </item>
 </menu>

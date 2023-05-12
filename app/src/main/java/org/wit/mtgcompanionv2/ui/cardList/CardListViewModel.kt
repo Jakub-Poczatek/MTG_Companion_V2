@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import org.wit.mtgcompanionv2.firebase.FirebaseDBManager
 import org.wit.mtgcompanionv2.firebase.FirebaseImageManager
+import org.wit.mtgcompanionv2.firebase.SortTerm
 //import org.wit.mtgcompanionv2.models.CardManager
 import org.wit.mtgcompanionv2.models.CardModel
 import timber.log.Timber
@@ -21,13 +22,13 @@ class CardListViewModel : ViewModel() {
 
 
     init {
-        load()
+        load(SortTerm.None)
     }
 
-    fun load() {
+    fun load(sortTerm: SortTerm) {
         try {
             readOnly.value = false
-            FirebaseDBManager.findAll(liveFirebaseUser.value?.uid!!, cardsList)
+            FirebaseDBManager.findAll(liveFirebaseUser.value?.uid!!, cardsList, sortTerm)
             Timber.i("Cards List Load Success : ${cardsList.value.toString()}")
         }
         catch (e: Exception) {
